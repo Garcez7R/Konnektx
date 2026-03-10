@@ -161,8 +161,9 @@ img {
 }
 
 .btn.ghost {
-  border-color: rgba(245, 243, 236, 0.2);
+  border-color: rgba(245, 243, 236, 0.5);
   background: transparent;
+  color: var(--ink);
 }
 
 .btn:hover {
