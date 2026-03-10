@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react'
+import { CSSProperties, useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { API_BASE, fetchMe, fetchSalon, logout } from '../lib/api'
+import { API_BASE, createAppointment, fetchMe, fetchSalon, logout } from '../lib/api'
 import type { SalonProfile } from '../lib/api'
 
 const currency = new Intl.NumberFormat('pt-BR', {
@@ -13,6 +13,11 @@ export default function SalonPage() {
   const [profile, setProfile] = useState<SalonProfile | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [userName, setUserName] = useState<string | null>(null)
+  const [bookingStatus, setBookingStatus] = useState<string | null>(null)
+  const [selectedService, setSelectedService] = useState<string>('')
+  const [selectedStaff, setSelectedStaff] = useState<string>('')
+  const [startsAt, setStartsAt] = useState<string>('')
+  const [notes, setNotes] = useState<string>('')
 
   const safeSlug = useMemo(() => slug ?? '', [slug])
 
@@ -55,8 +60,13 @@ export default function SalonPage() {
     )
   }
 
+  const themeStyle: CSSProperties = {
+    '--accent': profile.themePrimary || undefined,
+    '--accent-strong': profile.themeSecondary || undefined,
+  }
+
   return (
-    <div className="page salon">
+    <div className="page salon" style={themeStyle}>
       <Link className="back-link" to="/">
         Voltar para home
       </Link>
@@ -99,6 +109,59 @@ export default function SalonPage() {
               Falar com a equipe
             </button>
           </div>
+          {userName ? (
+            <div className="booking-card">
+              <strong>Agendar agora</strong>
+              <label>Servico</label>
+              <select value={selectedService} onChange={(event) => setSelectedService(event.target.value)}>
+                <option value="">Selecione</option>
+                {profile.services.map((service) => (
+                  <option key={service.id} value={service.id}>
+                    {service.name}
+                  </option>
+                ))}
+              </select>
+              <label>Profissional (opcional)</label>
+              <select value={selectedStaff} onChange={(event) => setSelectedStaff(event.target.value)}>
+                <option value="">Sem preferencia</option>
+                {profile.staff.map((person) => (
+                  <option key={person.id} value={person.id}>
+                    {person.name}
+                  </option>
+                ))}
+              </select>
+              <label>Data e hora</label>
+              <input type="datetime-local" value={startsAt} onChange={(event) => setStartsAt(event.target.value)} />
+              <label>Observacoes</label>
+              <textarea rows={3} value={notes} onChange={(event) => setNotes(event.target.value)} />
+              <button
+                className="btn primary"
+                onClick={async () => {
+                  if (!selectedService || !startsAt) {
+                    setBookingStatus('Selecione o servico e horario.')
+                    return
+                  }
+                  try {
+                    setBookingStatus('Agendando...')
+                    await createAppointment(profile.slug, {
+                      serviceId: selectedService,
+                      staffId: selectedStaff || undefined,
+                      startsAt: new Date(startsAt).toISOString(),
+                      notes: notes || undefined,
+                    })
+                    setBookingStatus('Agendamento criado!')
+                  } catch (err) {
+                    setBookingStatus('Falha ao agendar.')
+                  }
+                }}
+              >
+                Confirmar
+              </button>
+              {bookingStatus && <span>{bookingStatus}</span>}
+            </div>
+          ) : (
+            <p className="hero-subtitle">Entre com Google para agendar.</p>
+          )}
         </div>
         <div className="salon-hero-media">
           <img
@@ -110,7 +173,7 @@ export default function SalonPage() {
 
       <section className="section grid">
         {profile.services.map((service) => (
-          <article key={service.name} className="feature">
+          <article key={service.id} className="feature">
             <h3>{service.name}</h3>
             <p>
               {service.durationMinutes} min · {currency.format(service.priceCents / 100)}

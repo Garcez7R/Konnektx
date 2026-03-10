@@ -105,7 +105,7 @@ img {
 }
 
 .btn.primary {
-  background: linear-gradient(135deg, #f5ce5b, #d39a1d);
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
   color: #1a1a1a;
   box-shadow: 0 10px 30px rgba(209, 155, 31, 0.35);
 }
@@ -220,6 +220,30 @@ img {
   margin-top: 16px;
 }
 
+.booking-card {
+  background: var(--soft);
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+  display: grid;
+  gap: 12px;
+}
+
+.booking-card label {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.booking-card input,
+.booking-card select,
+.booking-card textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(12, 18, 15, 0.12);
+  font-family: inherit;
+}
+
 .salon-hero {
   display: grid;
   gap: 32px;
@@ -271,6 +295,62 @@ img {
 .loading {
   font-size: 1.1rem;
   color: var(--muted);
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.admin-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.admin-toolbar {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.admin-toolbar select {
+  margin-top: 6px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(12, 18, 15, 0.12);
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tab {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(12, 18, 15, 0.15);
+  background: transparent;
+  cursor: pointer;
+}
+
+.tab.active {
+  background: rgba(12, 18, 15, 0.08);
+  font-weight: 600;
+}
+
+.admin-panel {
+  display: grid;
+  gap: 24px;
+}
+
+.admin-list {
+  display: grid;
+  gap: 24px;
 }
 
 @media (max-width: 720px) {

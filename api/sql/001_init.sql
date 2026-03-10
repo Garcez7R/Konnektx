@@ -8,6 +8,9 @@ CREATE TABLE IF NOT EXISTS salons (
   tagline TEXT,
   logo_url TEXT,
   cover_url TEXT,
+  theme_primary TEXT,
+  theme_secondary TEXT,
+  template_key TEXT,
   created_at TEXT NOT NULL
 );
 
@@ -16,6 +19,7 @@ CREATE TABLE IF NOT EXISTS users (
   email TEXT NOT NULL UNIQUE,
   name TEXT NOT NULL,
   role TEXT NOT NULL,
+  google_sub TEXT,
   created_at TEXT NOT NULL
 );
 
