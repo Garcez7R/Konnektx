@@ -190,7 +190,7 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
             </div>
           )}
 
-          {activeTab === 'serviços' && (
+          {activeTab === 'servicos' && (
             <div className="admin-list">
               <div className="booking-card">
                 <strong>Novo serviço</strong>
