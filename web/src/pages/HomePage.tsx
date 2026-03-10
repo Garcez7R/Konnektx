@@ -13,10 +13,16 @@ export default function HomePage() {
       <header className="hero">
         <div className="hero-content">
           <p className="eyebrow">KONNEKTX</p>
-          <h1>Brilho local, agenda cheia.</h1>
+          <h1>Brilho local, gestão de elite.</h1>
           <p className="hero-subtitle">
-            Um PWA para barbearias, salões, manicures e podólogos com página
-            própria, agendamento e fidelidade.
+            A tecnologia dos grandes salões, simplificada para o seu negócio.
+          </p>
+          <p className="hero-subtitle">
+            Transforme sua barbearia ou salão em uma plataforma digital de alta
+            performance. Tenha seu próprio link de agendamento online que
+            funciona como um app — sem o cliente precisar baixar nada. Gestão
+            de equipe, página personalizada e fidelidade integrada para manter
+            sua agenda sempre lotada.
           </p>
           <div className="hero-actions">
             <Link className="btn primary" to="/s/aurora">
