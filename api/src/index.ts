@@ -552,6 +552,35 @@ export default {
       const user = await getSessionUser(request, env)
       const authError = requirePlatformAdmin(user)
       if (authError) return jsonResponse(await authError.json(), { status: authError.status, headers: corsHeaders })
+      if (request.method === 'POST') {
+        const body = await readBody<{ slug: string; name: string; city: string; tagline?: string }>(request)
+        const slug = body.slug?.toLowerCase().trim()
+        if (!slug || !/^[a-z0-9-]+$/.test(slug)) {
+          return jsonResponse({ error: 'Slug invalido' }, { status: 400, headers: corsHeaders })
+        }
+        if (!body.name || !body.city) {
+          return jsonResponse({ error: 'Nome e cidade obrigatorios' }, { status: 400, headers: corsHeaders })
+        }
+        const existing = await env.DB.prepare('SELECT id FROM salons WHERE slug = ? LIMIT 1')
+          .bind(slug)
+          .first<{ id: string }>()
+        if (existing) {
+          return jsonResponse({ error: 'Slug ja existe' }, { status: 409, headers: corsHeaders })
+        }
+        const id = `salon_${crypto.randomUUID()}`
+        await env.DB.prepare(
+          'INSERT INTO salons (id, slug, name, city, tagline, created_at) VALUES (?, ?, ?, ?, ?, datetime(\"now\"))'
+        )
+          .bind(id, slug, body.name, body.city, body.tagline ?? null)
+          .run()
+        const loyaltyId = `loyalty_${crypto.randomUUID()}`
+        await env.DB.prepare(
+          'INSERT INTO loyalty_rules (id, salon_id, mode, points_per_service, target_points, reward_description, config_json, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, datetime(\"now\"))'
+        )
+          .bind(loyaltyId, id, 'simple', 1, 10, 'Ganhe 1 ponto por corte. A cada 10, um servico gratis.', null)
+          .run()
+        return jsonResponse({ id }, { status: 201, headers: corsHeaders })
+      }
       const salons = await env.DB.prepare('SELECT id, slug, name, city FROM salons ORDER BY name ASC').all()
       return jsonResponse({ salons: salons.results ?? [] }, { headers: corsHeaders })
     }

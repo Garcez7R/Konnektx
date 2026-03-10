@@ -98,6 +98,9 @@ export default function AdminPage() {
               {tab}
             </button>
           ))}
+          <a className="tab" href="/app/novo">
+            novo salao
+          </a>
         </div>
       </div>
 
