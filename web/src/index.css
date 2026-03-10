@@ -64,6 +64,20 @@ img {
   margin-bottom: 24px;
 }
 
+.salon-title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.salon-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  object-fit: cover;
+  border: 1px solid rgba(245, 243, 236, 0.2);
+}
+
 .eyebrow {
   font-size: 0.9rem;
   letter-spacing: 0.2em;
@@ -345,7 +359,9 @@ img {
   margin-top: 6px;
   padding: 10px 12px;
   border-radius: 12px;
-  border: 1px solid rgba(12, 18, 15, 0.12);
+  border: 1px solid rgba(245, 243, 236, 0.2);
+  background: #0f1411;
+  color: var(--ink);
 }
 
 .admin-tabs {
@@ -357,14 +373,36 @@ img {
 .tab {
   padding: 8px 14px;
   border-radius: 999px;
-  border: 1px solid rgba(12, 18, 15, 0.15);
+  border: 1px solid rgba(245, 243, 236, 0.2);
   background: transparent;
   cursor: pointer;
 }
 
 .tab.active {
-  background: rgba(12, 18, 15, 0.08);
+  background: rgba(245, 243, 236, 0.1);
   font-weight: 600;
+}
+
+.template-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+.template-card {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(245, 243, 236, 0.15);
+  background: rgba(245, 243, 236, 0.05);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.template-swatch {
+  height: 60px;
+  border-radius: 10px;
 }
 
 .admin-panel {

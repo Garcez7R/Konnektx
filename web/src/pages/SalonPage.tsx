@@ -1,6 +1,6 @@
 import { CSSProperties, useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { API_BASE, createAppointment, fetchMe, fetchSalon, logout } from '../lib/api'
+import { API_BASE, fetchMe, fetchSalon, logout } from '../lib/api'
 import type { SalonProfile } from '../lib/api'
 
 const currency = new Intl.NumberFormat('pt-BR', {
@@ -13,11 +13,6 @@ export default function SalonPage() {
   const [profile, setProfile] = useState<SalonProfile | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [userName, setUserName] = useState<string | null>(null)
-  const [bookingStatus, setBookingStatus] = useState<string | null>(null)
-  const [selectedService, setSelectedService] = useState<string>('')
-  const [selectedStaff, setSelectedStaff] = useState<string>('')
-  const [startsAt, setStartsAt] = useState<string>('')
-  const [notes, setNotes] = useState<string>('')
 
   const safeSlug = useMemo(() => slug ?? '', [slug])
 
@@ -60,9 +55,17 @@ export default function SalonPage() {
     )
   }
 
+  const templateTheme = {
+    aurora: { primary: '#2a6b46', secondary: '#c1993a' },
+    noir: { primary: '#1f3b3f', secondary: '#8b6b2f' },
+    clean: { primary: '#2d6a6a', secondary: '#c9a33a' },
+  } as const
+
+  const selectedTemplate = profile.templateKey ? templateTheme[profile.templateKey as keyof typeof templateTheme] : undefined
+
   const themeStyle: CSSProperties = {
-    '--accent': profile.themePrimary || undefined,
-    '--accent-strong': profile.themeSecondary || undefined,
+    '--accent': profile.themePrimary || selectedTemplate?.primary || undefined,
+    '--accent-strong': profile.themeSecondary || selectedTemplate?.secondary || undefined,
   }
 
   return (
@@ -74,7 +77,12 @@ export default function SalonPage() {
       <section className="salon-hero">
         <div className="salon-hero-text">
           <p className="eyebrow">{profile.city}</p>
-          <h1>{profile.name}</h1>
+          <div className="salon-title">
+            {profile.logoUrl && (
+              <img className="salon-logo" src={profile.logoUrl} alt={`Logo ${profile.name}`} />
+            )}
+            <h1>{profile.name}</h1>
+          </div>
           <p className="hero-subtitle">{profile.tagline}</p>
           {userName && (
             <div className="user-badge">
@@ -94,66 +102,13 @@ export default function SalonPage() {
             <button
               className="btn primary"
               onClick={() => {
-                const redirect = encodeURIComponent(window.location.href)
+                const redirect = encodeURIComponent(`${window.location.origin}/s/${profile.slug}/agendar`)
                 window.location.href = `${API_BASE}/api/auth/google?redirect=${redirect}`
               }}
             >
               Agendar horario
             </button>
           </div>
-          {userName ? (
-            <div className="booking-card">
-              <strong>Agendar agora</strong>
-              <label>Servico</label>
-              <select value={selectedService} onChange={(event) => setSelectedService(event.target.value)}>
-                <option value="">Selecione</option>
-                {profile.services.map((service) => (
-                  <option key={service.id} value={service.id}>
-                    {service.name}
-                  </option>
-                ))}
-              </select>
-              <label>Profissional (opcional)</label>
-              <select value={selectedStaff} onChange={(event) => setSelectedStaff(event.target.value)}>
-                <option value="">Sem preferencia</option>
-                {profile.staff.map((person) => (
-                  <option key={person.id} value={person.id}>
-                    {person.name}
-                  </option>
-                ))}
-              </select>
-              <label>Data e hora</label>
-              <input type="datetime-local" value={startsAt} onChange={(event) => setStartsAt(event.target.value)} />
-              <label>Observacoes</label>
-              <textarea rows={3} value={notes} onChange={(event) => setNotes(event.target.value)} />
-              <button
-                className="btn primary"
-                onClick={async () => {
-                  if (!selectedService || !startsAt) {
-                    setBookingStatus('Selecione o servico e horario.')
-                    return
-                  }
-                  try {
-                    setBookingStatus('Agendando...')
-                    await createAppointment(profile.slug, {
-                      serviceId: selectedService,
-                      staffId: selectedStaff || undefined,
-                      startsAt: new Date(startsAt).toISOString(),
-                      notes: notes || undefined,
-                    })
-                    setBookingStatus('Agendamento criado!')
-                  } catch (err) {
-                    setBookingStatus('Falha ao agendar.')
-                  }
-                }}
-              >
-                Confirmar
-              </button>
-              {bookingStatus && <span>{bookingStatus}</span>}
-            </div>
-          ) : (
-            <p className="hero-subtitle">Entre com Google para agendar.</p>
-          )}
         </div>
         <div className="salon-hero-media">
           <img

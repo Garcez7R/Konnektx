@@ -585,6 +585,20 @@ export default {
       return jsonResponse({ salons: salons.results ?? [] }, { headers: corsHeaders })
     }
 
+    if (pathname === '/api/admin/slug-check') {
+      const user = await getSessionUser(request, env)
+      const authError = requirePlatformAdmin(user)
+      if (authError) return jsonResponse(await authError.json(), { status: authError.status, headers: corsHeaders })
+      const slug = (searchParams.get('slug') || '').toLowerCase()
+      if (!slug || !/^[a-z0-9-]+$/.test(slug)) {
+        return jsonResponse({ available: false }, { headers: corsHeaders })
+      }
+      const existing = await env.DB.prepare('SELECT id FROM salons WHERE slug = ? LIMIT 1')
+        .bind(slug)
+        .first<{ id: string }>()
+      return jsonResponse({ available: !existing }, { headers: corsHeaders })
+    }
+
     if (pathname === '/api/admin/metrics') {
       const user = await getSessionUser(request, env)
       const authError = requirePlatformAdmin(user)

@@ -68,6 +68,15 @@ export async function fetchAdminSalons() {
   return response.json() as Promise<{ salons: Array<{ id: string; slug: string; name: string; city: string }> }>
 }
 
+export async function validateSlug(slug: string) {
+  const response = await fetch(`${API_BASE}/api/admin/slug-check?slug=${slug}`, { credentials: 'include' })
+  if (!response.ok) {
+    const message = await response.text()
+    throw new Error(message || 'Falha ao validar slug')
+  }
+  return response.json() as Promise<{ available: boolean }>
+}
+
 export async function createSalon(payload: { slug: string; name: string; city: string; tagline?: string }) {
   const response = await fetch(`${API_BASE}/api/admin/salons`, {
     method: 'POST',

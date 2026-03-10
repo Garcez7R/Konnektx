@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react'
-import { API_BASE, createSalon, fetchMe } from '../lib/api'
+import { useEffect, useMemo, useState } from 'react'
+import { API_BASE, createSalon, fetchMe, validateSlug } from '../lib/api'
 
 export default function CreateSalonPage() {
   const [userName, setUserName] = useState<string | null>(null)
   const [userRole, setUserRole] = useState<string | null>(null)
   const [status, setStatus] = useState<string | null>(null)
+  const [slug, setSlug] = useState('')
+  const [slugStatus, setSlugStatus] = useState<string | null>(null)
 
   useEffect(() => {
     fetchMe()
@@ -17,6 +19,28 @@ export default function CreateSalonPage() {
         setUserRole(null)
       })
   }, [])
+
+  useEffect(() => {
+    if (!slug) {
+      setSlugStatus(null)
+      return
+    }
+    const timer = setTimeout(async () => {
+      if (!/^[a-z0-9-]+$/.test(slug)) {
+        setSlugStatus('Slug invalido (use a-z, 0-9 e -)')
+        return
+      }
+      try {
+        const data = await validateSlug(slug)
+        setSlugStatus(data.available ? 'Slug disponivel' : 'Slug ja existe')
+      } catch (err) {
+        setSlugStatus('Erro ao validar slug')
+      }
+    }, 400)
+    return () => clearTimeout(timer)
+  }, [slug])
+
+  const canCreate = useMemo(() => slugStatus === 'Slug disponivel', [slugStatus])
 
   return (
     <div className="page">
@@ -50,16 +74,22 @@ export default function CreateSalonPage() {
           <label>Nome do salao</label>
           <input id="salon-name" placeholder="Salao Aurora" />
           <label>Slug</label>
-          <input id="salon-slug" placeholder="aurora" />
+          <input
+            id="salon-slug"
+            placeholder="aurora"
+            value={slug}
+            onChange={(event) => setSlug(event.target.value.toLowerCase())}
+          />
+          {slugStatus && <span>{slugStatus}</span>}
           <label>Cidade</label>
           <input id="salon-city" placeholder="Itajuba - MG" />
           <label>Tagline</label>
           <input id="salon-tagline" placeholder="Cortes modernos e experiencia premium" />
           <button
             className="btn primary"
+            disabled={!canCreate}
             onClick={async () => {
               const name = (document.getElementById('salon-name') as HTMLInputElement)?.value.trim()
-              const slug = (document.getElementById('salon-slug') as HTMLInputElement)?.value.trim().toLowerCase()
               const city = (document.getElementById('salon-city') as HTMLInputElement)?.value.trim()
               const tagline = (document.getElementById('salon-tagline') as HTMLInputElement)?.value.trim()
               if (!name || !slug || !city) {
