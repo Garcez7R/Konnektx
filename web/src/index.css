@@ -107,6 +107,18 @@ img {
   text-transform: uppercase;
 }
 
+.eyebrow.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
 .hero-actions {
   display: flex;
   gap: 16px;
@@ -220,10 +232,14 @@ img {
 }
 
 .card-badges span {
-  background: rgba(245, 243, 236, 0.12);
+  background: rgba(245, 243, 236, 0.1);
   padding: 6px 12px;
   border-radius: 999px;
   font-size: 0.85rem;
+}
+
+.section-title {
+  grid-column: 1 / -1;
 }
 
 .section {

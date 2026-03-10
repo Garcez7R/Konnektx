@@ -1,10 +1,26 @@
 import { Link } from 'react-router-dom'
 
 const highlights = [
-  'Agenda online com fidelidade integrada',
-  'Página pública linda e personalizável',
-  'Painel para dono e funcionários',
-  'Promoções por pontos ou regras',
+  {
+    title: 'Agenda Digital Inteligente',
+    description:
+      'Seu link exclusivo para o cliente marcar horário sozinho, acabando com a confusão no WhatsApp.',
+  },
+  {
+    title: 'Sua Vitrine na Internet',
+    description:
+      'Uma página linda e profissional com sua logo, suas cores e suas melhores fotos de serviços.',
+  },
+  {
+    title: 'Painel de Controle Completo',
+    description:
+      'Área exclusiva para o dono e funcionários acompanharem os atendimentos do dia com clareza.',
+  },
+  {
+    title: 'Programa de Fidelidade',
+    description:
+      'Crie promoções por pontos ou regras automáticas para garantir que o cliente escolha sempre você.',
+  },
 ]
 
 export default function HomePage() {
@@ -12,7 +28,10 @@ export default function HomePage() {
     <div className="page">
       <header className="hero">
         <div className="hero-content">
-          <p className="eyebrow">KONNEKTX</p>
+          <p className="eyebrow brand">
+            <img className="brand-icon" src="/mda.png" alt="" />
+            KONNEKTX
+          </p>
           <h1>Brilho local, gestão de elite.</h1>
           <p className="hero-subtitle">
             A tecnologia dos grandes salões, simplificada para o seu negócio.
@@ -20,13 +39,13 @@ export default function HomePage() {
           <p className="hero-subtitle">
             Transforme sua barbearia ou salão em uma plataforma digital de alta
             performance. Tenha seu próprio link de agendamento online que
-            funciona como um app — sem o cliente precisar baixar nada. Gestão
-            de equipe, página personalizada e fidelidade integrada para manter
-            sua agenda sempre lotada.
+            funciona como um app no celular — mas sem o cliente precisar baixar
+            nada ou ocupar memória. Gestão de equipe, página personalizada e
+            fidelidade integrada para manter sua agenda sempre lotada.
           </p>
           <div className="hero-actions">
             <Link className="btn primary" to="/s/aurora">
-              Ver demo
+              Ver demonstração
             </Link>
             <a className="btn ghost" href="/app">
               Entrar no painel
@@ -52,12 +71,12 @@ export default function HomePage() {
         <div className="hero-card">
           <div className="card-glow" />
           <div className="card-body">
-            <p className="card-title">Salão Aurora</p>
+            <p className="card-title">Exemplo: Salão Aurora</p>
             <p className="card-subtitle">Centro, Pelotas - RS</p>
             <div className="card-badges">
-              <span>Agenda online</span>
-              <span>Fidelidade ativa</span>
-              <span>Equipe completa</span>
+              <span>Agenda online: Seus clientes marcam 24h por dia.</span>
+              <span>Fidelidade ativa: Prêmios que fazem o cliente voltar.</span>
+              <span>Equipe completa: Gestão simples de todos os profissionais.</span>
             </div>
           </div>
         </div>
@@ -67,43 +86,48 @@ export default function HomePage() {
       </header>
 
       <section className="section grid">
+        <div className="section-title">
+          <h2>Tudo o que você precisa em um só lugar</h2>
+        </div>
         {highlights.map((item) => (
-          <article key={item} className="feature">
-            <h3>{item}</h3>
-            <p>
-              Tudo pronto para o dono do salão publicar em minutos e manter a
-              agenda organizada.
-            </p>
+          <article key={item.title} className="feature">
+            <h3>{item.title}</h3>
+            <p>{item.description}</p>
           </article>
         ))}
       </section>
 
       <section className="section split">
         <div>
-          <h2>Pronto para a sua cidade.</h2>
+          <h2>Pronto para a sua cidade</h2>
           <p>
-            Konnektx nasce para negócios locais. Cada salão ganha um slug próprio
-            no formato <strong>konnektx.app/s/salao</strong>.
+            O Konnektx nasceu para fortalecer o comércio local. Seu salão ganha
+            um endereço exclusivo na internet (ex: konnektx.app/s/seusalao).
           </p>
           <ul className="list">
-            <li>Layouts por template com cores e logo.</li>
-            <li>Página pública rápida para celular.</li>
-            <li>Promoções para segurar o cliente.</li>
+            <li>Visual Personalizado: escolha modelos prontos que combinam com a sua marca.</li>
+            <li>Rapidez Total: página leve que abre instantaneamente em qualquer celular.</li>
+            <li>Fidelidade que Funciona: ferramentas para segurar o cliente e aumentar seu lucro.</li>
           </ul>
         </div>
         <div className="glass-panel">
-          <h3>O que vem no MVP</h3>
-          <p>Agenda, equipe, serviços, fidelidade e painel do dono.</p>
-          <div className="pill">Primeiro deploy funcional</div>
+          <h3>O que você recebe ao começar</h3>
+          <p>Agenda mestre, gestão de equipe, vitrine de serviços, sistema de pontos e painel do dono.</p>
+          <div className="pill">Pronto para o primeiro uso</div>
+          <div className="hero-actions">
+            <a className="btn primary" href="/app">
+              Pronto para o primeiro uso
+            </a>
+          </div>
         </div>
       </section>
 
       <section className="section contact-section">
         <div className="glass-panel">
-          <h2>Konnektx · Fale conosco</h2>
+          <h2>Quer levar o Konnektx para sua barbearia ou salão?</h2>
           <p>
-            Quer levar o Konnektx para sua barbearia ou salão? Fale direto com a
-            equipe e a gente te ajuda a publicar hoje mesmo.
+            Fale direto com a nossa equipe e a gente te ajuda a colocar tudo no ar
+            agora.
           </p>
           <button
             className="btn primary btn-icon"
