@@ -25,6 +25,14 @@ export default function HomePage() {
             <a className="btn ghost" href="/app">
               Entrar no painel
             </a>
+            <button
+              className="btn ghost"
+              onClick={() => {
+                window.open('https://wa.me/551996263385', '_blank', 'noopener,noreferrer')
+              }}
+            >
+              Fale conosco
+            </button>
           </div>
         </div>
         <div className="hero-card">

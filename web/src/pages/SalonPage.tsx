@@ -100,14 +100,6 @@ export default function SalonPage() {
             >
               Agendar horario
             </button>
-            <button
-              className="btn ghost"
-              onClick={() => {
-                window.open('https://wa.me/551996263385', '_blank', 'noopener,noreferrer')
-              }}
-            >
-              Falar com a equipe
-            </button>
           </div>
           {userName ? (
             <div className="booking-card">
