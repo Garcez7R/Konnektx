@@ -107,16 +107,45 @@ img {
   text-transform: uppercase;
 }
 
-.eyebrow.brand {
+.brand-row {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  position: relative;
+}
+
+.brand-menu {
+  border: 1px solid rgba(245, 243, 236, 0.2);
+  background: rgba(245, 243, 236, 0.08);
+  border-radius: 12px;
+  padding: 6px;
+  cursor: pointer;
 }
 
 .brand-icon {
   width: 28px;
   height: 28px;
   object-fit: contain;
+  display: block;
+}
+
+.brand-dropdown {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  background: rgba(11, 31, 24, 0.95);
+  border: 1px solid rgba(197, 160, 89, 0.35);
+  border-radius: 14px;
+  padding: 10px 12px;
+  display: grid;
+  gap: 8px;
+  min-width: 200px;
+  z-index: 10;
+}
+
+.brand-dropdown a {
+  color: var(--ink);
+  font-size: 0.9rem;
 }
 
 .hero-actions {

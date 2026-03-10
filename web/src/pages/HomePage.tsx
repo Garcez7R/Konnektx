@@ -30,6 +30,7 @@ const highlights = [
 
 export default function HomePage() {
   const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null)
+  const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
     const handler = (event: Event) => {
@@ -44,10 +45,24 @@ export default function HomePage() {
     <div className="page">
       <header className="hero">
         <div className="hero-content">
-          <p className="eyebrow brand">
-            <img className="brand-icon" src="/pwa-192.png" alt="" />
-            KONNEKTX
-          </p>
+          <div className="brand-row">
+            <button
+              className="brand-menu"
+              aria-label="Abrir menu"
+              onClick={() => setMenuOpen((prev) => !prev)}
+            >
+              <img className="brand-icon" src="/novoicon.png" alt="" />
+            </button>
+            <p className="eyebrow brand">KONNEKTX</p>
+            {menuOpen && (
+              <div className="brand-dropdown">
+                <Link to="/">Início</Link>
+                <Link to="/s/aurora">Ver demonstração</Link>
+                <a href="/app">Entrar no painel</a>
+                <a href="/app/gestor">Área do gestor</a>
+              </div>
+            )}
+          </div>
           <h1>Brilho local, gestão de elite.</h1>
           <p className="hero-subtitle">
             A tecnologia dos grandes salões, simplificada para o seu negócio.
