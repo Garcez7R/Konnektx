@@ -19,7 +19,7 @@ export default function SalonPage() {
 
   useEffect(() => {
     if (!safeSlug) {
-      setError('Slug nao informado')
+      setError('Slug não informado')
       return
     }
 
@@ -51,7 +51,7 @@ export default function SalonPage() {
   if (!profile) {
     return (
       <div className="page">
-        <p className="loading">Carregando salao...</p>
+        <p className="loading">Carregando salão...</p>
       </div>
     )
   }
@@ -112,7 +112,7 @@ export default function SalonPage() {
                 window.location.href = `${API_BASE}/api/auth/google?redirect=${redirect}`
               }}
             >
-              Agendar horario
+              Agendar horário
             </button>
           </div>
         </div>
@@ -124,7 +124,7 @@ export default function SalonPage() {
         </div>
       </section>
 
-      <section className="section grid" id="servicos">
+      <section className="section grid" id="serviços">
         {profile.services.map((service) => (
           <article key={service.id} className="feature">
             <h3>{service.name}</h3>
@@ -155,7 +155,7 @@ export default function SalonPage() {
           <p>
             {profile.loyalty
               ? `${profile.loyalty.rewardDescription} (meta de ${profile.loyalty.targetPoints} pontos)`
-              : 'Ganhe 1 ponto por corte. A cada 10, um servico gratis.'}
+              : 'Ganhe 1 ponto por corte. A cada 10, um serviço grátis.'}
           </p>
           <div className="pill">Clube Konnektx</div>
         </div>

@@ -1,6 +1,6 @@
 # Konnektx
 
-Konnektx e um PWA para barbearias, saloes e profissionais de beleza com pagina publica, agendamento e fidelidade.
+Konnektx é um PWA para barbearias, salões e profissionais de beleza com página pública, agendamento e fidelidade.
 
 ## Demo
 - Front: (em breve)
@@ -9,7 +9,7 @@ Konnektx e um PWA para barbearias, saloes e profissionais de beleza com pagina p
 ## Arquitetura
 - `web/`: PWA (Vite + React + TypeScript)
 - `api/`: Cloudflare Worker
-- D1 + R2: previstos na proxima etapa
+- D1 + R2: previstos na próxima etapa
 
 ## Rodar local
 1. `cd api` e rode `npm install` (uma vez)
@@ -31,7 +31,7 @@ No Pages, configure `VITE_API_BASE` com a URL do Worker.
 3. No Worker, configure os secrets:
    `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `SESSION_SECRET`, `APP_ORIGIN`
 
-## Variaveis de ambiente
+## Variáveis de ambiente
 - `VITE_API_BASE` (front)
 - `GOOGLE_CLIENT_ID` (worker)
 - `GOOGLE_CLIENT_SECRET` (worker)
@@ -43,9 +43,9 @@ No Pages, configure `VITE_API_BASE` com a URL do Worker.
 
 ## Roadmap
 - Login Google para clientes e equipe
-- Banco D1 para saloes, agenda e fidelidade
+- Banco D1 para salões, agenda e fidelidade
 - Upload de logo e capa no R2
-- Painel do salao (dono + funcionarios)
+- Painel do salão (dono + funcionários)
 
-## Licenca
+## Licença
 A definir

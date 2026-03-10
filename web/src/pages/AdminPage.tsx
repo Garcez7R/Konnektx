@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { API_BASE, createService, createStaff, fetchAdminSalons, fetchAppointments, fetchCustomers, fetchMe, fetchMetrics, fetchSalon, fetchServices, fetchStaff, updateSalon } from '../lib/api'
 
-const tabs = ['dashboard', 'servicos', 'equipe', 'agenda', 'clientes', 'aparencia', 'config'] as const
+const tabs = ['dashboard', 'serviços', 'equipe', 'agenda', 'clientes', 'aparencia', 'config'] as const
 
 type TabKey = (typeof tabs)[number]
 
@@ -112,7 +112,7 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
       <header className="admin-header">
         <div>
           <h1>Painel Konnektx</h1>
-          <p>Gestao central e auditoria de saloes.</p>
+          <p>Gestão central e auditoria de salões.</p>
         </div>
         <div className="admin-actions">
           {userName ? (
@@ -157,13 +157,13 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
             </button>
           ))}
           <a className="tab" href="/app/novo">
-            novo salao
+            novo salão
           </a>
         </div>
       </div>
 
       {needsLogin && <p>Entre com Google para acessar o painel.</p>}
-      {!needsLogin && userRole !== 'platform_admin' && <p>Seu usuario nao tem permissao master.</p>}
+      {!needsLogin && userRole !== 'platform_admin' && <p>Seu usuário não tem permissão master.</p>}
 
       {!needsLogin && userRole === 'platform_admin' && (
         <section className="admin-panel">
@@ -180,10 +180,10 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
             </div>
           )}
 
-          {activeTab === 'servicos' && (
+          {activeTab === 'serviços' && (
             <div className="admin-list">
               <div className="booking-card">
-                <strong>Novo servico</strong>
+                <strong>Novo serviço</strong>
                 <label>Nome</label>
                 <input id="svc-name" />
                 <label>Duracao (min)</label>
@@ -281,7 +281,7 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
           {activeTab === 'aparencia' && (
             <div className="admin-list">
               <div className="progress-card">
-                <h3>Seu salao esta ficando pronto</h3>
+                <h3>Seu salão está ficando pronto</h3>
                 <ul className="checklist">
                   {checklist.map((item) => (
                     <li key={item.label} className={item.done ? 'done' : ''}>
@@ -292,7 +292,7 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
                 </ul>
               </div>
               <div className="booking-card">
-                <strong>Aparencia do salao</strong>
+                <strong>Aparência do salão</strong>
                 <label>Logo (URL)</label>
                 <input value={logoUrl} onChange={(event) => setLogoUrl(event.target.value)} />
                 <label>Capa (URL)</label>
@@ -348,8 +348,8 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
                       themeSecondary: themeSecondary || null,
                       templateKey: templateKey || null,
                     })
-                    setToast('Seu salao ganhou vida')
-                    setStatus('Aparencia atualizada')
+                    setToast('Seu salão ganhou vida')
+                    setStatus('Aparência atualizada')
                     setInitialAppearance({
                       logoUrl,
                       coverUrl,
@@ -367,9 +367,9 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
 
           {activeTab === 'config' && (
             <div className="glass-panel">
-              <p>Configuacoes gerais do salao (horarios, politicas, etc.)</p>
+              <p>Configurações gerais do salão (horários, políticas, etc.)</p>
               <a className="btn primary" href={`/s/${selectedSlug}`} target="_blank" rel="noreferrer">
-                Abrir pagina do salao
+                Abrir página do salão
               </a>
             </div>
           )}

@@ -58,7 +58,7 @@ export default function SalonBookingPage() {
       )}
       {userName && (
         <div className="booking-card">
-          <label>Servico</label>
+          <label>Serviço</label>
           <select value={selectedService} onChange={(event) => setSelectedService(event.target.value)}>
             <option value="">Selecione</option>
             {profile.services.map((service) => (
@@ -69,7 +69,7 @@ export default function SalonBookingPage() {
           </select>
           <label>Profissional (opcional)</label>
           <select value={selectedStaff} onChange={(event) => setSelectedStaff(event.target.value)}>
-            <option value="">Sem preferencia</option>
+            <option value="">Sem preferência</option>
             {profile.staff.map((person) => (
               <option key={person.id} value={person.id}>
                 {person.name}
@@ -78,13 +78,13 @@ export default function SalonBookingPage() {
           </select>
           <label>Data e hora</label>
           <input type="datetime-local" value={startsAt} onChange={(event) => setStartsAt(event.target.value)} />
-          <label>Observacoes</label>
+          <label>Observações</label>
           <textarea rows={3} value={notes} onChange={(event) => setNotes(event.target.value)} />
           <button
             className="btn primary"
             onClick={async () => {
               if (!selectedService || !startsAt) {
-                setStatus('Selecione o servico e horario.')
+                setStatus('Selecione o serviço e o horário.')
                 return
               }
               try {

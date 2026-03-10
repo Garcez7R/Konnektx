@@ -46,8 +46,8 @@ export default function CreateSalonPage() {
     <div className="page">
       <header className="admin-header">
         <div>
-          <h1>Novo salao</h1>
-          <p>Crie o primeiro salao e ja ajuste o layout.</p>
+          <h1>Novo salão</h1>
+          <p>Crie o primeiro salão e já ajuste o layout.</p>
         </div>
         <div className="admin-actions">
           {userName ? (
@@ -66,12 +66,12 @@ export default function CreateSalonPage() {
         </div>
       </header>
 
-      {!userName && <p>Entre com Google para criar um salao.</p>}
-      {userName && userRole !== 'platform_admin' && <p>Seu usuario nao tem permissao master.</p>}
+      {!userName && <p>Entre com Google para criar um salão.</p>}
+      {userName && userRole !== 'platform_admin' && <p>Seu usuário não tem permissão master.</p>}
 
       {userName && userRole === 'platform_admin' && (
         <div className="booking-card">
-          <label>Nome do salao</label>
+          <label>Nome do salão</label>
           <input id="salon-name" placeholder="Salao Aurora" />
           <label>Slug</label>
           <input
@@ -104,11 +104,11 @@ export default function CreateSalonPage() {
                   window.location.href = '/app'
                 }, 800)
               } catch (err) {
-                setStatus('Falha ao criar salao.')
+                setStatus('Falha ao criar salão.')
               }
             }}
           >
-            Criar salao
+            Criar salão
           </button>
           {status && <span>{status}</span>}
         </div>

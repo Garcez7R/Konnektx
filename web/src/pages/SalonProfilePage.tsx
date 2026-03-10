@@ -46,7 +46,7 @@ export default function SalonProfilePage() {
       <h1>Seu perfil</h1>
       <div className="glass-panel">
         <p><strong>Nome:</strong> {userName}</p>
-        <p><strong>Email:</strong> {userEmail}</p>
+        <p><strong>E-mail:</strong> {userEmail}</p>
       </div>
     </div>
   )

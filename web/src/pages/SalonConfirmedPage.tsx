@@ -5,9 +5,9 @@ export default function SalonConfirmedPage() {
   return (
     <div className="page">
       <h1>Agendamento confirmado!</h1>
-      <p>Voce recebera uma mensagem com os detalhes. Ate breve.</p>
+      <p>Você receberá uma mensagem com os detalhes. Até breve.</p>
       <Link className="btn primary" to={`/s/${slug ?? ''}`}>
-        Voltar para o salao
+        Voltar para o salão
       </Link>
     </div>
   )
