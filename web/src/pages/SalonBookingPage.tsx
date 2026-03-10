@@ -2,10 +2,13 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { API_BASE, createAppointment, fetchMe, fetchSalon } from '../lib/api'
 import type { SalonProfile } from '../lib/api'
+import SalonBottomNav from '../components/SalonBottomNav'
+import { getDemoSalon } from '../lib/demo'
 
 export default function SalonBookingPage() {
   const { slug } = useParams()
   const [profile, setProfile] = useState<SalonProfile | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const [userName, setUserName] = useState<string | null>(null)
   const [status, setStatus] = useState<string | null>(null)
   const [selectedService, setSelectedService] = useState('')
@@ -19,7 +22,14 @@ export default function SalonBookingPage() {
     if (!safeSlug) return
     fetchSalon(safeSlug)
       .then(setProfile)
-      .catch(() => setProfile(null))
+      .catch((err) => {
+        const demo = getDemoSalon(safeSlug)
+        if (demo) {
+          setProfile(demo)
+          return
+        }
+        setError(err.message || 'Falha ao carregar o salão.')
+      })
   }, [safeSlug])
 
   useEffect(() => {
@@ -28,16 +38,30 @@ export default function SalonBookingPage() {
       .catch(() => setUserName(null))
   }, [])
 
+  if (error) {
+    return (
+      <div className="page salon">
+        <Link className="back-link" to={`/s/${safeSlug}`}>
+          Voltar
+        </Link>
+        <div className="glass-panel">
+          <h2>Ops, algo deu errado</h2>
+          <p>{error}</p>
+        </div>
+      </div>
+    )
+  }
+
   if (!profile) {
     return (
-      <div className="page">
+      <div className="page salon">
         <p className="loading">Carregando...</p>
       </div>
     )
   }
 
   return (
-    <div className="page">
+    <div className="page salon">
       <Link className="back-link" to={`/s/${profile.slug}`}>
         Voltar
       </Link>
@@ -110,6 +134,7 @@ export default function SalonBookingPage() {
           {status && <span>{status}</span>}
         </div>
       )}
+      <SalonBottomNav slug={profile.slug} active="agenda" />
     </div>
   )
 }

@@ -3,6 +3,8 @@ import type { CSSProperties } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { API_BASE, fetchMe, fetchSalon, logout } from '../lib/api'
 import type { SalonProfile } from '../lib/api'
+import SalonBottomNav from '../components/SalonBottomNav'
+import { getDemoSalon } from '../lib/demo'
 
 const currency = new Intl.NumberFormat('pt-BR', {
   style: 'currency',
@@ -26,32 +28,9 @@ export default function SalonPage() {
     fetchSalon(safeSlug)
       .then(setProfile)
       .catch((err) => {
-        if (safeSlug === 'aurora') {
-          setProfile({
-            slug: 'aurora',
-            name: 'Salão Aurora',
-            city: 'Pelotas - RS',
-            tagline: 'Cortes modernos e experiência premium.',
-            logoUrl: '',
-            coverUrl: '/cover-placeholder.svg',
-            themePrimary: '#002D20',
-            themeSecondary: '#C5A059',
-            templateKey: 'aurora',
-            services: [
-              { id: 'svc-demo-1', name: 'Corte masculino', durationMinutes: 45, priceCents: 6500 },
-              { id: 'svc-demo-2', name: 'Barba completa', durationMinutes: 30, priceCents: 4500 },
-              { id: 'svc-demo-3', name: 'Combo corte + barba', durationMinutes: 70, priceCents: 9800 },
-            ],
-            staff: [
-              { id: 'staff-demo-1', name: 'Lívia Costa', role: 'Master barber' },
-              { id: 'staff-demo-2', name: 'Rafael Nunes', role: 'Estilista' },
-            ],
-            loyalty: {
-              rewardDescription: 'Ganhe 1 ponto por corte. A cada 10, um serviço grátis.',
-              targetPoints: 10,
-              pointsPerService: 1,
-            },
-          })
+        const demo = getDemoSalon(safeSlug)
+        if (demo) {
+          setProfile(demo)
           setError(null)
           return
         }
@@ -194,52 +173,7 @@ export default function SalonPage() {
           <div className="pill">Clube Konnektx</div>
         </div>
       </section>
-      <nav className="bottom-nav">
-        <a href={`/s/${profile.slug}`}>
-          <span className="nav-icon">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path
-                fill="currentColor"
-                d="M12 3l9 8h-3v9h-5v-6H11v6H6v-9H3l9-8z"
-              />
-            </svg>
-          </span>
-          Inicio
-        </a>
-        <a href={`/s/${profile.slug}/agendar`}>
-          <span className="nav-icon">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path
-                fill="currentColor"
-                d="M7 2h2v2h6V2h2v2h3v18H4V4h3V2zm13 6H6v12h14V8zM8 10h4v4H8v-4z"
-              />
-            </svg>
-          </span>
-          Agenda
-        </a>
-        <a href="#fidelidade">
-          <span className="nav-icon">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path
-                fill="currentColor"
-                d="M12 2l2.6 5.3L20 8l-4 3.9.9 5.6L12 15.7 7.1 17.5 8 11.9 4 8l5.4-.7L12 2z"
-              />
-            </svg>
-          </span>
-          Fidelidade
-        </a>
-        <a href={`/s/${profile.slug}/perfil`}>
-          <span className="nav-icon">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path
-                fill="currentColor"
-                d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-4.4 0-8 2.2-8 5v3h16v-3c0-2.8-3.6-5-8-5z"
-              />
-            </svg>
-          </span>
-          Perfil
-        </a>
-      </nav>
+      <SalonBottomNav slug={profile.slug} />
     </div>
   )
 }

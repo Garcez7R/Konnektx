@@ -31,6 +31,8 @@ const highlights = [
 export default function HomePage() {
   const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [isInstalled, setIsInstalled] = useState(false)
+  const [isIos, setIsIos] = useState(false)
 
   useEffect(() => {
     const handler = (event: Event) => {
@@ -40,6 +42,20 @@ export default function HomePage() {
     window.addEventListener('beforeinstallprompt', handler)
     return () => window.removeEventListener('beforeinstallprompt', handler)
   }, [])
+
+  useEffect(() => {
+    const userAgent = window.navigator.userAgent.toLowerCase()
+    setIsIos(/iphone|ipad|ipod/.test(userAgent))
+    const standalone =
+      window.matchMedia('(display-mode: standalone)').matches ||
+      (window.navigator as Navigator & { standalone?: boolean }).standalone
+    setIsInstalled(Boolean(standalone))
+    const handleInstalled = () => setIsInstalled(true)
+    window.addEventListener('appinstalled', handleInstalled)
+    return () => window.removeEventListener('appinstalled', handleInstalled)
+  }, [])
+
+  const showInstall = !isInstalled && (Boolean(installPrompt) || isIos)
 
   return (
     <div className="page">
@@ -101,9 +117,6 @@ export default function HomePage() {
           <p className="legal-note">
             Ao continuar, você concorda com o tratamento de dados conforme a LGPD
             (Lei 13.709/2018) e o Marco Civil da Internet (Lei 12.965/2014).
-          </p>
-          <p className="legal-note ios-note">
-            No iPhone, toque em Compartilhar e selecione “Adicionar à Tela de Início”.
           </p>
         </div>
         <div className="hero-card">
@@ -220,16 +233,30 @@ export default function HomePage() {
             </span>
             Chamar no WhatsApp
           </button>
-          {installPrompt && (
-            <button
-              className="btn ghost install-btn"
-              onClick={async () => {
-                await installPrompt.prompt()
-                setInstallPrompt(null)
-              }}
-            >
-              Instalar app
-            </button>
+          {showInstall && (
+            <div className="install-block">
+              {installPrompt && (
+                <button
+                  className="btn ghost install-btn"
+                  onClick={async () => {
+                    await installPrompt.prompt()
+                    setInstallPrompt(null)
+                  }}
+                >
+                  Instalar app
+                </button>
+              )}
+              {isIos && !installPrompt && (
+                <button className="btn ghost install-btn" type="button">
+                  Instalar no iPhone
+                </button>
+              )}
+              {isIos && (
+                <p className="legal-note ios-note">
+                  No iPhone, toque em Compartilhar e selecione “Adicionar à Tela de Início”.
+                </p>
+              )}
+            </div>
           )}
         </div>
       </section>

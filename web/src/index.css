@@ -198,8 +198,13 @@ img {
 }
 
 .install-btn {
-  margin-top: 12px;
+  margin-top: 0;
   width: fit-content;
+}
+
+.install-block {
+  display: grid;
+  gap: 6px;
 }
 
 .legal-note {
@@ -566,12 +571,20 @@ img {
   z-index: 15;
 }
 
-.bottom-nav a {
+.bottom-nav .nav-link {
   display: grid;
   gap: 4px;
   justify-items: center;
   font-size: 0.8rem;
   color: var(--muted);
+  padding: 6px 8px;
+  border-radius: 12px;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.bottom-nav .nav-link.active {
+  color: var(--ink);
+  background: rgba(197, 160, 89, 0.18);
 }
 
 .bottom-nav .nav-icon {

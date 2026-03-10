@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { API_BASE, fetchMe } from '../lib/api'
+import SalonBottomNav from '../components/SalonBottomNav'
 
 export default function SalonProfilePage() {
   const { slug } = useParams()
@@ -23,7 +24,7 @@ export default function SalonProfilePage() {
 
   if (!userName) {
     return (
-      <div className="page">
+      <div className="page salon">
         <p>Entre com Google para acessar seu perfil.</p>
         <button
           className="btn primary"
@@ -38,12 +39,13 @@ export default function SalonProfilePage() {
           Ao continuar, você concorda com o tratamento de dados conforme a LGPD
           (Lei 13.709/2018) e o Marco Civil da Internet (Lei 12.965/2014).
         </p>
+        <SalonBottomNav slug={safeSlug} active="perfil" />
       </div>
     )
   }
 
   return (
-    <div className="page">
+    <div className="page salon">
       <Link className="back-link" to={`/s/${safeSlug}`}>
         Voltar
       </Link>
@@ -52,6 +54,7 @@ export default function SalonProfilePage() {
         <p><strong>Nome:</strong> {userName}</p>
         <p><strong>E-mail:</strong> {userEmail}</p>
       </div>
+      <SalonBottomNav slug={safeSlug} active="perfil" />
     </div>
   )
 }
