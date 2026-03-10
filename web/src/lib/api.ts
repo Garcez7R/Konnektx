@@ -30,7 +30,11 @@ export type SalonProfile = {
   staff: SalonStaff[]
 }
 
-export const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8787'
+const DEFAULT_API_BASE = import.meta.env.DEV
+  ? 'http://localhost:8787'
+  : 'https://konnektx-api.rgs-dba7.workers.dev'
+
+export const API_BASE = import.meta.env.VITE_API_BASE || DEFAULT_API_BASE
 
 export async function fetchSalon(slug: string): Promise<SalonProfile> {
   const response = await fetch(`${API_BASE}/api/salons/${slug}`)
