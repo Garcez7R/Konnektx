@@ -84,6 +84,10 @@ export default function HomePage() {
               Fale conosco
             </button>
           </div>
+          <p className="legal-note">
+            Ao continuar, você concorda com o tratamento de dados conforme a LGPD
+            (Lei 13.709/2018) e o Marco Civil da Internet (Lei 12.965/2014).
+          </p>
         </div>
         <div className="hero-card">
           <div className="card-glow" />
