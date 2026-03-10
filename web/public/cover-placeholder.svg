@@ -1,0 +1,7 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="800" rx="48" fill="#F8E6D3" />
+  <circle cx="320" cy="280" r="220" fill="#FFD5A7" />
+  <circle cx="820" cy="420" r="280" fill="#FFE5C4" />
+  <text x="140" y="480" fill="#6C5744" font-size="64" font-family="Space Grotesk, sans-serif">Konnektx</text>
+  <text x="140" y="550" fill="#9B7E66" font-size="28" font-family="Space Grotesk, sans-serif">Seu salao, sua luz</text>
+</svg>
