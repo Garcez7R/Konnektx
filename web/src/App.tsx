@@ -13,6 +13,7 @@ import AdminCustomersPage from './pages/AdminCustomersPage'
 import AdminAppearancePage from './pages/AdminAppearancePage'
 import AdminConfigPage from './pages/AdminConfigPage'
 import AdminSupportPage from './pages/AdminSupportPage'
+import GestorPage from './pages/GestorPage'
 
 export default function App() {
   return (
@@ -27,6 +28,7 @@ export default function App() {
       <Route path="/app/aparencia" element={<AdminAppearancePage />} />
       <Route path="/app/config" element={<AdminConfigPage />} />
       <Route path="/app/suporte/:slug" element={<AdminSupportPage />} />
+      <Route path="/app/gestor" element={<GestorPage />} />
       <Route path="/s/:slug" element={<SalonPage />} />
       <Route path="/s/:slug/agendar" element={<SalonBookingPage />} />
       <Route path="/s/:slug/confirmado" element={<SalonConfirmedPage />} />

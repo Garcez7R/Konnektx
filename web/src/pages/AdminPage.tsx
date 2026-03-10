@@ -381,6 +381,9 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
               <a className="btn primary" href={`/s/${selectedSlug}`} target="_blank" rel="noreferrer">
                 Abrir página do salão
               </a>
+              <a className="btn ghost" href="/app/gestor">
+                Área do gestor
+              </a>
             </div>
           )}
         </section>

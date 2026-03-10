@@ -1,0 +1,71 @@
+import { useEffect, useState } from 'react'
+import { API_BASE, fetchMe } from '../lib/api'
+
+export default function GestorPage() {
+  const [userName, setUserName] = useState<string | null>(null)
+  const [userEmail, setUserEmail] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetchMe()
+      .then((data) => {
+        setUserName(data.user?.name ?? null)
+        setUserEmail(data.user?.email ?? null)
+      })
+      .catch(() => {
+        setUserName(null)
+        setUserEmail(null)
+      })
+  }, [])
+
+  if (!userName) {
+    return (
+      <div className="page">
+        <h1>Área do gestor</h1>
+        <p>Entre com Google para acessar sua área de gestão.</p>
+        <button
+          className="btn primary"
+          onClick={() => {
+            const redirect = encodeURIComponent(window.location.href)
+            window.location.href = `${API_BASE}/api/auth/google?redirect=${redirect}`
+          }}
+        >
+          Entrar com Google
+        </button>
+      </div>
+    )
+  }
+
+  return (
+    <div className="page">
+      <h1>Área do gestor</h1>
+      <div className="grid">
+        <div className="feature">
+          <h3>Seus dados</h3>
+          <p><strong>Nome:</strong> {userName}</p>
+          <p><strong>E-mail:</strong> {userEmail}</p>
+        </div>
+        <div className="feature">
+          <h3>Seu plano</h3>
+          <p>Plano atual: Ouro (exemplo)</p>
+          <p>Próxima cobrança: 10/04/2026</p>
+        </div>
+        <div className="feature">
+          <h3>Preferências</h3>
+          <p>Notificações, idioma e horários serão configuráveis aqui.</p>
+        </div>
+        <div className="feature">
+          <h3>Suporte</h3>
+          <p>Precisa de ajuda? Fale com nossa equipe.</p>
+          <button
+            className="btn ghost"
+            onClick={() => {
+              window.open('https://wa.me/551996263385', '_blank', 'noopener,noreferrer')
+            }}
+          >
+            Falar com suporte
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
