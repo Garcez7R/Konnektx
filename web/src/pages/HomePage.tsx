@@ -7,24 +7,24 @@ type BeforeInstallPromptEvent = Event & {
 
 const highlights = [
   {
-    title: 'Agenda Digital Inteligente',
+    title: 'Sua Agenda Digital',
     description:
-      'Seu link exclusivo para o cliente marcar horário sozinho, acabando com a confusão no WhatsApp.',
+      'Um link exclusivo com a sua cara para o cliente marcar horário sozinho, acabando com a confusão no WhatsApp.',
   },
   {
     title: 'Sua Vitrine na Internet',
     description:
-      'Uma página linda e profissional com sua logo, suas cores e suas melhores fotos de serviços.',
+      'Uma página profissional que destaca seu trabalho, suas fotos e seus preços de forma elegante.',
   },
   {
-    title: 'Painel de Controle Completo',
+    title: 'Controle Simples e Direto',
     description:
-      'Área exclusiva para o dono e funcionários acompanharem os atendimentos do dia com clareza.',
+      'Um painel que você domina em minutos para organizar sua equipe e ver o movimento do dia.',
   },
   {
-    title: 'Programa de Fidelidade',
+    title: 'Fidelidade que Traz o Cliente de Volta',
     description:
-      'Crie promoções por pontos ou regras automáticas para garantir que o cliente escolha sempre você.',
+      'Crie cartões fidelidade digitais e promoções que garantem que o cliente escolha sempre o seu salão.',
   },
 ]
 
@@ -63,17 +63,16 @@ export default function HomePage() {
               </div>
             )}
           </div>
-          <h1>Brilho local, gestão de elite.</h1>
+          <h1>Sua marca em destaque, sua agenda lotada.</h1>
           <p className="hero-subtitle">
-            A tecnologia dos grandes salões, simplificada para o seu negócio.
+            A tecnologia que você entende, o resultado que você quer.
           </p>
-          <p className="hero-subtitle">Beauty as a Service para negócios locais.</p>
           <p className="hero-subtitle">
-            Transforme sua barbearia ou salão em uma plataforma digital de alta
-            performance. Tenha seu próprio link de agendamento online que
-            funciona como um app no celular — mas sem o cliente precisar baixar
-            nada ou ocupar memória. Gestão de equipe, página personalizada e
-            fidelidade integrada para manter sua agenda sempre lotada.
+            Transforme sua barbearia ou salão com uma ferramenta feita para quem
+            não tem tempo a perder. Tenha seu próprio link de agendamento que
+            funciona direto no celular do cliente — sem que ele precise baixar
+            nada ou ocupar memória. É a evolução do seu negócio, simples de usar
+            e focada no seu crescimento.
           </p>
           <div className="hero-actions">
             <Link className="btn primary" to="/s/aurora">
@@ -109,11 +108,6 @@ export default function HomePage() {
           <div className="card-body">
             <p className="card-title">Exemplo: Salão Aurora</p>
             <p className="card-subtitle">Centro, Pelotas - RS</p>
-            <div className="card-badges">
-              <span>Agenda online: Seus clientes marcam 24h por dia.</span>
-              <span>Fidelidade ativa: Prêmios que fazem o cliente voltar.</span>
-              <span>Equipe completa: Gestão simples de todos os profissionais.</span>
-            </div>
           </div>
         </div>
         <div className="hero-mock">
@@ -123,7 +117,7 @@ export default function HomePage() {
 
       <section className="section grid">
         <div className="section-title">
-          <h2>Tudo o que você precisa em um só lugar</h2>
+          <h2>Como o Konnektx trabalha com você:</h2>
         </div>
         {highlights.map((item) => (
           <article key={item.title} className="feature">
@@ -137,61 +131,30 @@ export default function HomePage() {
         <div>
           <h2>Pronto para a sua cidade</h2>
           <p>
-            O Konnektx nasceu para fortalecer o comércio local. Seu salão ganha
-            um endereço exclusivo na internet (ex: konnektx.app/s/seusalao).
+            O Konnektx nasceu para fortalecer quem faz a economia local girar.
+            Seu salão ganha um endereço próprio (ex: konnektx.app/s/seusalao).
           </p>
           <ul className="list">
-            <li>Visual Personalizado: escolha modelos prontos que combinam com a sua marca.</li>
-            <li>Rapidez Total: página leve que abre instantaneamente em qualquer celular.</li>
-            <li>Fidelidade que Funciona: ferramentas para segurar o cliente e aumentar seu lucro.</li>
+            <li>Sem instalações complicadas: funciona direto no navegador do celular.</li>
+            <li>Rapidez Total: abre instantaneamente, mesmo em conexões mais lentas.</li>
+            <li>Feito para Parceria: a gente te ajuda a configurar e colocar no ar hoje mesmo.</li>
           </ul>
         </div>
         <div className="glass-panel">
-          <h3>O que você recebe ao começar</h3>
-          <p>Agenda mestre, gestão de equipe, vitrine de serviços, sistema de pontos e painel do dono.</p>
+          <h3>O que você recebe ao começar:</h3>
+          <p>Agenda inteligente, gestão de equipe, vitrine de serviços, sistema de pontos e painel do dono.</p>
           <div className="hero-actions">
             <a className="btn primary" href="/app">
-              Pronto para o primeiro uso
+              Tudo pronto para o seu primeiro uso
             </a>
           </div>
+          <p className="hero-subtitle">
+            A tecnologia que você entende para o resultado que você sempre quis.
+          </p>
         </div>
       </section>
 
-      <section className="section split">
-        <div>
-          <h2>Beauty as a Service</h2>
-          <p>
-            Você não assina apenas um software. Você recebe um negócio digital
-            em uma caixa: hospedagem, design premium e agendamento online.
-          </p>
-          <p>
-            Em poucos minutos, sua presença digital está pronta para vender
-            mais.
-          </p>
-        </div>
-        <div className="plans">
-          <div className="plan-card">
-            <h3>Plano Bronze</h3>
-            <p>Para o profissional individual.</p>
-            <ul className="list">
-              <li>Agenda + link próprio</li>
-              <li>Página personalizada</li>
-              <li>Suporte inicial</li>
-            </ul>
-            <div className="pill">Recorrência mensal</div>
-          </div>
-          <div className="plan-card highlight">
-            <h3>Plano Ouro</h3>
-            <p>Para barbearias com equipe.</p>
-            <ul className="list">
-              <li>Painel de funcionários</li>
-              <li>Fidelidade integrada</li>
-              <li>Relatórios do salão</li>
-            </ul>
-            <div className="pill">Escala e performance</div>
-          </div>
-        </div>
-      </section>
+      
 
       <section className="section contact-section">
         <div className="glass-panel">
