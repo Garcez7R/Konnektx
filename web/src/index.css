@@ -62,7 +62,9 @@ img {
   position: absolute;
   inset: -40px;
   background: url('/mda.png') center/contain no-repeat;
-  opacity: 0.08;
+  opacity: 0.18;
+  mix-blend-mode: screen;
+  filter: brightness(1.4) contrast(1.1);
   pointer-events: none;
 }
 
