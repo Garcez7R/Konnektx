@@ -193,19 +193,24 @@ async function fetchGoogleProfile(accessToken: string) {
   return response.json() as Promise<{ sub: string; email: string; name: string }>
 }
 
+function isMasterEmail(env: Env, email: string) {
+  return env.MASTER_EMAIL && email.toLowerCase() === env.MASTER_EMAIL.toLowerCase()
+}
+
 async function upsertUser(env: Env, profile: { sub: string; email: string; name: string }) {
   const existing = await env.DB.prepare('SELECT id, role FROM users WHERE email = ? LIMIT 1')
     .bind(profile.email)
     .first<{ id: string; role: string }>()
   if (existing) {
-    await env.DB.prepare('UPDATE users SET name = ?, google_sub = ? WHERE id = ?')
-      .bind(profile.name, profile.sub, existing.id)
+    const nextRole = isMasterEmail(env, profile.email) ? 'platform_admin' : existing.role
+    await env.DB.prepare('UPDATE users SET name = ?, google_sub = ?, role = ? WHERE id = ?')
+      .bind(profile.name, profile.sub, nextRole, existing.id)
       .run()
-    return { id: existing.id, role: existing.role }
+    return { id: existing.id, role: nextRole }
   }
 
   const id = `user_${crypto.randomUUID()}`
-  const role = 'customer'
+  const role = isMasterEmail(env, profile.email) ? 'platform_admin' : 'customer'
   await env.DB.prepare('INSERT INTO users (id, email, name, role, google_sub, created_at) VALUES (?, ?, ?, ?, ?, datetime("now"))')
     .bind(id, profile.email, profile.name, role, profile.sub)
     .run()

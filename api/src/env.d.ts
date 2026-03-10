@@ -4,4 +4,5 @@ interface Env {
   GOOGLE_CLIENT_SECRET: string
   SESSION_SECRET: string
   APP_ORIGIN: string
+  MASTER_EMAIL: string
 }

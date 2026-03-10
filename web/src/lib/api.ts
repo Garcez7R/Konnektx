@@ -35,3 +35,21 @@ export async function fetchSalon(slug: string): Promise<SalonProfile> {
   }
   return response.json() as Promise<SalonProfile>
 }
+
+export async function fetchMe(): Promise<{ user: { name: string; email: string } | null }> {
+  const response = await fetch(`${API_BASE}/api/auth/me`, {
+    credentials: 'include',
+  })
+  if (!response.ok) {
+    const message = await response.text()
+    throw new Error(message || 'Falha ao carregar usuario')
+  }
+  return response.json() as Promise<{ user: { name: string; email: string } | null }>
+}
+
+export async function logout(): Promise<void> {
+  await fetch(`${API_BASE}/api/auth/logout`, {
+    method: 'POST',
+    credentials: 'include',
+  })
+}

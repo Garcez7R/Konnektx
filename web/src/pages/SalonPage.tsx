@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { API_BASE, fetchSalon } from '../lib/api'
+import { API_BASE, fetchMe, fetchSalon, logout } from '../lib/api'
 import type { SalonProfile } from '../lib/api'
 
 const currency = new Intl.NumberFormat('pt-BR', {
@@ -12,6 +12,7 @@ export default function SalonPage() {
   const { slug } = useParams()
   const [profile, setProfile] = useState<SalonProfile | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [userName, setUserName] = useState<string | null>(null)
 
   const safeSlug = useMemo(() => slug ?? '', [slug])
 
@@ -25,6 +26,12 @@ export default function SalonPage() {
       .then(setProfile)
       .catch((err) => setError(err.message))
   }, [safeSlug])
+
+  useEffect(() => {
+    fetchMe()
+      .then((data) => setUserName(data.user?.name ?? null))
+      .catch(() => setUserName(null))
+  }, [])
 
   if (error) {
     return (
@@ -59,6 +66,20 @@ export default function SalonPage() {
           <p className="eyebrow">{profile.city}</p>
           <h1>{profile.name}</h1>
           <p className="hero-subtitle">{profile.tagline}</p>
+          {userName && (
+            <div className="user-badge">
+              <span>Logado como {userName}</span>
+              <button
+                className="btn ghost"
+                onClick={async () => {
+                  await logout()
+                  window.location.href = '/'
+                }}
+              >
+                Sair
+              </button>
+            </div>
+          )}
           <div className="hero-actions">
             <button
               className="btn primary"

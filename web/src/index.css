@@ -78,6 +78,22 @@ img {
   flex-wrap: wrap;
 }
 
+.user-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: rgba(12, 18, 15, 0.06);
+  width: fit-content;
+}
+
+.user-badge span {
+  font-weight: 600;
+  color: var(--muted);
+}
+
 .btn {
   border-radius: 999px;
   padding: 12px 22px;

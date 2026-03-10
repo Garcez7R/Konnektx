@@ -37,6 +37,7 @@ No Pages, configure `VITE_API_BASE` com a URL do Worker.
 - `GOOGLE_CLIENT_SECRET` (worker)
 - `SESSION_SECRET` (worker)
 - `APP_ORIGIN` (worker, ex: https://konnektx.pages.dev)
+- `MASTER_EMAIL` (worker, ex: rgs.dba7@gmail.com)
 - `D1_DATABASE_ID` (futuro)
 - `R2_BUCKET_NAME` (futuro)
 
