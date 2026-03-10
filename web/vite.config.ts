@@ -8,20 +8,31 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['vite.svg'],
+      includeAssets: ['pwa-192.png', 'pwa-512.png', 'pwa-512-maskable.png'],
       manifest: {
         name: 'Konnektx',
         short_name: 'Konnektx',
         description: 'Agenda e fidelidade para barbearias e saloes locais.',
-        theme_color: '#ffb86b',
-        background_color: '#f5f2ee',
+        theme_color: '#1e6a43',
+        background_color: '#f5f4ee',
         display: 'standalone',
         start_url: '/',
         icons: [
           {
-            src: '/vite.svg',
-            sizes: 'any',
-            type: 'image/svg+xml',
+            src: '/pwa-192.png',
+            sizes: '192x192',
+            type: 'image/png',
+          },
+          {
+            src: '/pwa-512.png',
+            sizes: '512x512',
+            type: 'image/png',
+          },
+          {
+            src: '/pwa-512-maskable.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable',
           },
         ],
       },
