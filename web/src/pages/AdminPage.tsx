@@ -1,9 +1,19 @@
 import { useEffect, useMemo, useState } from 'react'
 import { API_BASE, createService, createStaff, fetchAdminSalons, fetchAppointments, fetchCustomers, fetchMe, fetchMetrics, fetchSalon, fetchServices, fetchStaff, updateSalon } from '../lib/api'
 
-const tabs = ['dashboard', 'serviços', 'equipe', 'agenda', 'clientes', 'aparencia', 'config'] as const
+const tabs = ['dashboard', 'servicos', 'equipe', 'agenda', 'clientes', 'aparencia', 'config'] as const
 
 type TabKey = (typeof tabs)[number]
+
+const tabLabels: Record<TabKey, string> = {
+  dashboard: 'dashboard',
+  servicos: 'serviços',
+  equipe: 'equipe',
+  agenda: 'agenda',
+  clientes: 'clientes',
+  aparencia: 'aparência',
+  config: 'config',
+}
 
 type AdminPageProps = {
   initialTab?: TabKey
@@ -153,7 +163,7 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
               className={tab === activeTab ? 'tab active' : 'tab'}
               onClick={() => setActiveTab(tab)}
             >
-              {tab}
+              {tabLabels[tab]}
             </button>
           ))}
           <a className="tab" href="/app/novo">
