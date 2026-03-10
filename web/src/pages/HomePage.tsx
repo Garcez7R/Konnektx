@@ -114,7 +114,6 @@ export default function HomePage() {
         <div className="glass-panel">
           <h3>O que você recebe ao começar</h3>
           <p>Agenda mestre, gestão de equipe, vitrine de serviços, sistema de pontos e painel do dono.</p>
-          <div className="pill">Pronto para o primeiro uso</div>
           <div className="hero-actions">
             <a className="btn primary" href="/app">
               Pronto para o primeiro uso
