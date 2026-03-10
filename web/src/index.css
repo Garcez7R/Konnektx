@@ -54,6 +54,21 @@ img {
   gap: 32px;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   align-items: center;
+  position: relative;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: -40px;
+  background: url('/mda.png') center/contain no-repeat;
+  opacity: 0.08;
+  pointer-events: none;
+}
+
+.hero > * {
+  position: relative;
+  z-index: 1;
 }
 
 .hero h1 {
