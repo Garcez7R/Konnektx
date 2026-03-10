@@ -27,6 +27,8 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
   const [customers, setCustomers] = useState<Array<{ id: string; name: string; email: string }>>([])
   const [metrics, setMetrics] = useState<{ appointments: number; customers: number } | null>(null)
   const [status, setStatus] = useState<string | null>(null)
+  const [logoPreview, setLogoPreview] = useState<string>('')
+  const [coverPreview, setCoverPreview] = useState<string>('')
 
   useEffect(() => {
     if (initialTab) {
@@ -239,9 +241,31 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
               <div className="booking-card">
                 <strong>Aparencia do salao</strong>
                 <label>Logo (URL)</label>
-                <input id="logo-url" placeholder="https://..." />
+                <input
+                  id="logo-url"
+                  placeholder="https://..."
+                  onChange={(event) => setLogoPreview(event.target.value)}
+                />
                 <label>Capa (URL)</label>
-                <input id="cover-url" placeholder="https://..." />
+                <input
+                  id="cover-url"
+                  placeholder="https://..."
+                  onChange={(event) => setCoverPreview(event.target.value)}
+                />
+                <div className="preview-grid">
+                  {logoPreview && (
+                    <div className="preview-card">
+                      <span>Logo</span>
+                      <img src={logoPreview} alt="Preview logo" />
+                    </div>
+                  )}
+                  {coverPreview && (
+                    <div className="preview-card">
+                      <span>Capa</span>
+                      <img src={coverPreview} alt="Preview capa" />
+                    </div>
+                  )}
+                </div>
                 <label>Cor principal</label>
                 <input id="theme-primary" placeholder="#2a6b46" />
                 <label>Cor secundaria</label>
@@ -255,6 +279,10 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
                       onClick={() => {
                         const input = document.getElementById('template-key') as HTMLInputElement
                         if (input) input.value = template.key
+                        const primaryInput = document.getElementById('theme-primary') as HTMLInputElement
+                        const secondaryInput = document.getElementById('theme-secondary') as HTMLInputElement
+                        if (primaryInput) primaryInput.value = template.primary
+                        if (secondaryInput) secondaryInput.value = template.secondary
                       }}
                     >
                       <div
@@ -294,6 +322,9 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
           {activeTab === 'config' && (
             <div className="glass-panel">
               <p>Configuacoes gerais do salao (horarios, politicas, etc.)</p>
+              <a className="btn primary" href={`/s/${selectedSlug}`} target="_blank" rel="noreferrer">
+                Abrir pagina do salao
+              </a>
             </div>
           )}
         </section>

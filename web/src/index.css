@@ -405,6 +405,27 @@ img {
   border-radius: 10px;
 }
 
+.preview-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+.preview-card {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(245, 243, 236, 0.12);
+  background: rgba(245, 243, 236, 0.04);
+}
+
+.preview-card img {
+  width: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
 .admin-panel {
   display: grid;
   gap: 24px;
