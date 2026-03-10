@@ -22,14 +22,12 @@ type SessionUser = {
 
 function getCorsHeaders(request: Request, env: Env) {
   const origin = request.headers.get('Origin') ?? ''
-  const allowedOrigin = env.APP_ORIGIN || origin || '*'
+  const allowedOrigin = origin || '*'
   const headers: Record<string, string> = {
     'Access-Control-Allow-Origin': allowedOrigin,
     'Access-Control-Allow-Methods': 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-  }
-  if (allowedOrigin !== '*') {
-    headers['Access-Control-Allow-Credentials'] = 'true'
+    'Vary': 'Origin',
   }
   return headers
 }
