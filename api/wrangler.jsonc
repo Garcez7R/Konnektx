@@ -12,6 +12,14 @@
 	},
 	"compatibility_flags": [
 		"nodejs_compat"
+	],
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "konnektx-db",
+			"database_id": "34aecf49-01b0-4b3a-b15b-70bf56253f56",
+			"remote": true
+		}
 	]
 	/**
 	 * Smart Placement

@@ -99,7 +99,11 @@ export default function SalonPage() {
         </div>
         <div className="glass-panel">
           <h3>Fidelidade ativa</h3>
-          <p>Ganhe 1 ponto por corte. A cada 10, um servico gratis.</p>
+          <p>
+            {profile.loyalty
+              ? `${profile.loyalty.rewardDescription} (meta de ${profile.loyalty.targetPoints} pontos)`
+              : 'Ganhe 1 ponto por corte. A cada 10, um servico gratis.'}
+          </p>
           <div className="pill">Clube Konnektx</div>
         </div>
       </section>
