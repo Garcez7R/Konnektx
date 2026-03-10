@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { fetchSalon, SalonProfile } from '../lib/api'
+import { fetchSalon } from '../lib/api'
+import type { SalonProfile } from '../lib/api'
 
 const currency = new Intl.NumberFormat('pt-BR', {
   style: 'currency',

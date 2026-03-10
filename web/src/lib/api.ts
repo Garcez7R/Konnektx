@@ -16,6 +16,11 @@ export type SalonProfile = {
   tagline: string
   logoUrl?: string
   coverUrl?: string
+  loyalty?: {
+    rewardDescription: string
+    targetPoints: number
+    pointsPerService: number
+  } | null
   services: SalonService[]
   staff: SalonStaff[]
 }
