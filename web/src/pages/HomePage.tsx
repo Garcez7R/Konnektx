@@ -102,12 +102,20 @@ export default function HomePage() {
             Ao continuar, você concorda com o tratamento de dados conforme a LGPD
             (Lei 13.709/2018) e o Marco Civil da Internet (Lei 12.965/2014).
           </p>
+          <p className="legal-note ios-note">
+            No iPhone, toque em Compartilhar e selecione “Adicionar à Tela de Início”.
+          </p>
         </div>
         <div className="hero-card">
           <div className="card-glow" />
           <div className="card-body">
             <p className="card-title">Exemplo: Salão Aurora</p>
             <p className="card-subtitle">Centro, Pelotas - RS</p>
+            <div className="card-badges">
+              <span>Agenda online 24h</span>
+              <span>Fidelidade ativa</span>
+              <span>Equipe completa</span>
+            </div>
           </div>
         </div>
         <div className="hero-mock">

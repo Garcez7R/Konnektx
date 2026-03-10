@@ -209,6 +209,10 @@ img {
   max-width: 520px;
 }
 
+.ios-note {
+  margin-top: 6px;
+}
+
 .btn.primary {
   background: linear-gradient(135deg, var(--accent), var(--accent-strong));
   color: #1a1a1a;
