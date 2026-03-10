@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { fetchSalon } from '../lib/api'
+import { API_BASE, fetchSalon } from '../lib/api'
 import type { SalonProfile } from '../lib/api'
 
 const currency = new Intl.NumberFormat('pt-BR', {
@@ -60,7 +60,15 @@ export default function SalonPage() {
           <h1>{profile.name}</h1>
           <p className="hero-subtitle">{profile.tagline}</p>
           <div className="hero-actions">
-            <button className="btn primary">Agendar horario</button>
+            <button
+              className="btn primary"
+              onClick={() => {
+                const redirect = encodeURIComponent(window.location.href)
+                window.location.href = `${API_BASE}/api/auth/google?redirect=${redirect}`
+              }}
+            >
+              Agendar horario
+            </button>
             <button className="btn ghost">Entrar no clube</button>
           </div>
         </div>

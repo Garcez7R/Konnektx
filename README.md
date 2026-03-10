@@ -24,10 +24,19 @@ Konnektx e um PWA para barbearias, saloes e profissionais de beleza com pagina p
 
 No Pages, configure `VITE_API_BASE` com a URL do Worker.
 
+## OAuth Google (login)
+1. No Google Cloud Console, crie um OAuth Client (tipo Web).
+2. Adicione o redirect URI:
+   `https://<seu-worker>.workers.dev/api/auth/google/callback`
+3. No Worker, configure os secrets:
+   `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `SESSION_SECRET`, `APP_ORIGIN`
+
 ## Variaveis de ambiente
 - `VITE_API_BASE` (front)
-- `GOOGLE_CLIENT_ID` (futuro)
-- `GOOGLE_CLIENT_SECRET` (futuro)
+- `GOOGLE_CLIENT_ID` (worker)
+- `GOOGLE_CLIENT_SECRET` (worker)
+- `SESSION_SECRET` (worker)
+- `APP_ORIGIN` (worker, ex: https://konnektx.pages.dev)
 - `D1_DATABASE_ID` (futuro)
 - `R2_BUCKET_NAME` (futuro)
 
