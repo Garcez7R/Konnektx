@@ -584,6 +584,19 @@ img {
   height: 100%;
 }
 
+.demo-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(197, 160, 89, 0.2);
+  border: 1px solid rgba(197, 160, 89, 0.5);
+  color: var(--ink);
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+}
+
 .preview-surface {
   display: grid;
   gap: 8px;
