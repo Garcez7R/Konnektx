@@ -94,6 +94,28 @@ export async function addSalonMember(slug: string, payload: { email: string; rol
   }
 }
 
+export async function fetchSalonMembers(slug: string) {
+  const response = await fetch(`${API_BASE}/api/admin/salons/${slug}/members`, { credentials: 'include' })
+  if (!response.ok) {
+    const message = await response.text()
+    throw new Error(message || 'Falha ao carregar membros')
+  }
+  return response.json() as Promise<{ members: Array<{ email: string; name: string; role: string; active: number }> }>
+}
+
+export async function updateSalonMember(slug: string, payload: { email: string; active?: number; role?: string }) {
+  const response = await fetch(`${API_BASE}/api/admin/salons/${slug}/members`, {
+    method: 'PUT',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  })
+  if (!response.ok) {
+    const message = await response.text()
+    throw new Error(message || 'Falha ao atualizar membro')
+  }
+}
+
 export async function validateSlug(slug: string) {
   const response = await fetch(`${API_BASE}/api/admin/slug-check?slug=${slug}`, { credentials: 'include' })
   if (!response.ok) {

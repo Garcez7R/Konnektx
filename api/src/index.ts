@@ -628,6 +628,21 @@ export default {
           .run()
         return jsonResponse({ ok: true }, { headers: corsHeaders })
       }
+      if (request.method === 'PUT') {
+        const body = await readBody<{ email: string; active?: number; role?: string }>(request)
+        const email = body.email?.toLowerCase().trim()
+        if (!email) return jsonResponse({ error: 'Email obrigatorio' }, { status: 400, headers: corsHeaders })
+        const userRow = await env.DB.prepare('SELECT id FROM users WHERE email = ? LIMIT 1')
+          .bind(email)
+          .first<{ id: string }>()
+        if (!userRow) return jsonResponse({ error: 'Usuario nao encontrado' }, { status: 404, headers: corsHeaders })
+        await env.DB.prepare(
+          'UPDATE salon_members SET role = COALESCE(?, role), active = COALESCE(?, active) WHERE salon_id = ? AND user_id = ?'
+        )
+          .bind(body.role ?? null, body.active ?? null, salon.id, userRow.id)
+          .run()
+        return jsonResponse({ ok: true }, { headers: corsHeaders })
+      }
     }
 
     if (pathname === '/api/admin/salons') {

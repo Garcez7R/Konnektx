@@ -5,6 +5,7 @@ import {
   createService,
   createStaff,
   fetchMe,
+  fetchMetrics,
   fetchOwnerSalons,
   fetchSalon,
   fetchServices,
@@ -25,6 +26,7 @@ export default function OwnerDashboardPage() {
   const [error, setError] = useState<string | null>(null)
   const [status, setStatus] = useState<string | null>(null)
   const [toast, setToast] = useState<string | null>(null)
+  const [metrics, setMetrics] = useState<{ appointments: number; customers: number } | null>(null)
 
   const [logoUrl, setLogoUrl] = useState('')
   const [coverUrl, setCoverUrl] = useState('')
@@ -94,6 +96,9 @@ export default function OwnerDashboardPage() {
     fetchStaff(activeSlug)
       .then((data) => setStaff(data.staff))
       .catch(() => setStaff([]))
+    fetchMetrics(activeSlug)
+      .then((data) => setMetrics(data))
+      .catch(() => setMetrics(null))
   }, [activeSlug])
 
   useEffect(() => {
@@ -216,6 +221,14 @@ export default function OwnerDashboardPage() {
             <div className="feature">
               <h3>Programa de fidelidade</h3>
               <p>{profile.loyalty?.rewardDescription || 'Ganhe 1 ponto por corte.'}</p>
+            </div>
+            <div className="feature">
+              <h3>Agendamentos</h3>
+              <p>{metrics?.appointments ?? 0}</p>
+            </div>
+            <div className="feature">
+              <h3>Clientes</h3>
+              <p>{metrics?.customers ?? 0}</p>
             </div>
           </div>
 

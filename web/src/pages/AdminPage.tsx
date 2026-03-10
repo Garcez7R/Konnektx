@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { API_BASE, addSalonMember, createService, createStaff, fetchAdminSalons, fetchAppointments, fetchCustomers, fetchMe, fetchMetrics, fetchSalon, fetchServices, fetchStaff, updateSalon } from '../lib/api'
+import { API_BASE, addSalonMember, createService, createStaff, fetchAdminSalons, fetchAppointments, fetchCustomers, fetchMe, fetchMetrics, fetchSalon, fetchSalonMembers, fetchServices, fetchStaff, updateSalon, updateSalonMember } from '../lib/api'
 
 const tabs = ['dashboard', 'servicos', 'equipe', 'agenda', 'clientes', 'aparencia', 'config'] as const
 
@@ -46,6 +46,7 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
   const [templateKey, setTemplateKey] = useState<string>('')
   const [memberEmail, setMemberEmail] = useState<string>('')
   const [memberRole, setMemberRole] = useState<string>('owner')
+  const [members, setMembers] = useState<Array<{ email: string; name: string; role: string; active: number }>>([])
 
   const [initialAppearance, setInitialAppearance] = useState({
     logoUrl: '',
@@ -85,6 +86,7 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
     fetchAppointments(selectedSlug).then((data) => setAppointments(data.appointments)).catch(() => null)
     fetchCustomers(selectedSlug).then((data) => setCustomers(data.customers)).catch(() => null)
     fetchMetrics(selectedSlug).then((data) => setMetrics(data)).catch(() => null)
+    fetchSalonMembers(selectedSlug).then((data) => setMembers(data.members)).catch(() => null)
     fetchSalon(selectedSlug)
       .then((data) => {
         const logo = data.logoUrl ?? ''
@@ -415,10 +417,36 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
                     await addSalonMember(selectedSlug, { email: memberEmail, role: memberRole })
                     setToast('Acesso concedido ao salão')
                     setMemberEmail('')
+                    fetchSalonMembers(selectedSlug).then((data) => setMembers(data.members)).catch(() => null)
                   }}
                 >
                   Conceder acesso
                 </button>
+                {members.length > 0 && (
+                  <div className="member-list">
+                    {members.map((member) => (
+                      <div key={member.email} className="member-row">
+                        <div>
+                          <strong>{member.name || member.email}</strong>
+                          <p>{member.email}</p>
+                        </div>
+                        <span className="pill">{member.role}</span>
+                        <span className={`pill ${member.active ? 'active' : ''}`}>
+                          {member.active ? 'Ativo' : 'Pausado'}
+                        </span>
+                        <button
+                          className="btn ghost"
+                          onClick={async () => {
+                            await updateSalonMember(selectedSlug, { email: member.email, active: member.active ? 0 : 1 })
+                            fetchSalonMembers(selectedSlug).then((data) => setMembers(data.members)).catch(() => null)
+                          }}
+                        >
+                          {member.active ? 'Pausar' : 'Reativar'}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           )}
