@@ -32,7 +32,7 @@ export default defineConfig({
             src: '/pwa-512-maskable.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'maskable',
+            purpose: 'any maskable',
           },
         ],
       },
