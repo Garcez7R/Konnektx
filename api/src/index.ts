@@ -26,7 +26,7 @@ function getCorsHeaders(request: Request, env: Env) {
   const headers: Record<string, string> = {
     'Access-Control-Allow-Origin': allowedOrigin,
     'Access-Control-Allow-Methods': 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
   }
   if (allowedOrigin !== '*') {
     headers['Access-Control-Allow-Credentials'] = 'true'
@@ -116,6 +116,14 @@ async function verifySessionToken(secret: string, token: string): Promise<Sessio
 }
 
 async function getSessionUser(request: Request, env: Env) {
+  const authHeader = request.headers.get('Authorization') || ''
+  if (authHeader.startsWith('Bearer ')) {
+    const bearer = authHeader.slice(7).trim()
+    if (bearer && env.SESSION_SECRET) {
+      const user = await verifySessionToken(env.SESSION_SECRET, bearer)
+      if (user) return user
+    }
+  }
   const cookies = parseCookies(request)
   const token = cookies.konnektx_session
   if (!token || !env.SESSION_SECRET) return null
@@ -344,6 +352,11 @@ export default {
         { id: user.id, email: profile.email, name: profile.name, role: user.role },
         60 * 60 * 24 * 7
       )
+      const accessToken = await createSessionToken(
+        env.SESSION_SECRET,
+        { id: user.id, email: profile.email, name: profile.name, role: user.role },
+        60 * 60 * 24 * 7
+      )
       const sessionCookie = buildSetCookie('konnektx_session', sessionToken, [
         'HttpOnly',
         'Secure',
@@ -351,7 +364,10 @@ export default {
         'Max-Age=604800',
       ])
       const clearStateCookie = buildSetCookie('oauth_state', '', ['Max-Age=0'])
-      return redirectResponse(redirect || env.APP_ORIGIN || '/', {
+      const target = redirect || env.APP_ORIGIN || '/'
+      const targetUrl = new URL(target, request.url)
+      targetUrl.hash = `token=${encodeURIComponent(accessToken)}`
+      return redirectResponse(targetUrl.toString(), {
         headers: {
           'Set-Cookie': [sessionCookie, clearStateCookie].join(', '),
         },

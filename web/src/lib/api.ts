@@ -1,3 +1,5 @@
+import { clearAccessToken, getAccessToken } from './auth'
+
 export type SalonService = {
   id?: string
   name: string
@@ -36,8 +38,21 @@ const DEFAULT_API_BASE = import.meta.env.DEV
 
 export const API_BASE = import.meta.env.VITE_API_BASE || DEFAULT_API_BASE
 
+function withAuth(init: RequestInit = {}) {
+  const token = getAccessToken()
+  const headers = new Headers(init.headers || {})
+  if (token) {
+    headers.set('Authorization', `Bearer ${token}`)
+  }
+  return { ...init, headers }
+}
+
+async function authFetch(input: RequestInfo | URL, init: RequestInit = {}) {
+  return fetch(input, withAuth(init))
+}
+
 export async function fetchSalon(slug: string): Promise<SalonProfile> {
-  const response = await fetch(`${API_BASE}/api/salons/${slug}`)
+  const response = await authFetch(`${API_BASE}/api/salons/${slug}`)
   if (!response.ok) {
     const message = await response.text()
     throw new Error(message || 'Falha ao carregar o salao')
@@ -46,9 +61,7 @@ export async function fetchSalon(slug: string): Promise<SalonProfile> {
 }
 
 export async function fetchMe(): Promise<{ user: { name: string; email: string; role?: string } | null }> {
-  const response = await fetch(`${API_BASE}/api/auth/me`, {
-    credentials: 'include',
-  })
+  const response = await authFetch(`${API_BASE}/api/auth/me`)
   if (!response.ok) {
     const message = await response.text()
     throw new Error(message || 'Falha ao carregar usuario')
@@ -57,14 +70,14 @@ export async function fetchMe(): Promise<{ user: { name: string; email: string; 
 }
 
 export async function logout(): Promise<void> {
-  await fetch(`${API_BASE}/api/auth/logout`, {
+  await authFetch(`${API_BASE}/api/auth/logout`, {
     method: 'POST',
-    credentials: 'include',
   })
+  clearAccessToken()
 }
 
 export async function fetchAdminSalons() {
-  const response = await fetch(`${API_BASE}/api/admin/salons`, { credentials: 'include' })
+  const response = await authFetch(`${API_BASE}/api/admin/salons`)
   if (!response.ok) {
     const message = await response.text()
     throw new Error(message || 'Falha ao carregar saloes')
@@ -73,7 +86,7 @@ export async function fetchAdminSalons() {
 }
 
 export async function fetchOwnerSalons() {
-  const response = await fetch(`${API_BASE}/api/owner/salons`, { credentials: 'include' })
+  const response = await authFetch(`${API_BASE}/api/owner/salons`)
   if (!response.ok) {
     const message = await response.text()
     throw new Error(message || 'Falha ao carregar saloes')
@@ -82,9 +95,8 @@ export async function fetchOwnerSalons() {
 }
 
 export async function addSalonMember(slug: string, payload: { email: string; role?: string }) {
-  const response = await fetch(`${API_BASE}/api/admin/salons/${slug}/members`, {
+  const response = await authFetch(`${API_BASE}/api/admin/salons/${slug}/members`, {
     method: 'POST',
-    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   })
@@ -95,7 +107,7 @@ export async function addSalonMember(slug: string, payload: { email: string; rol
 }
 
 export async function fetchSalonMembers(slug: string) {
-  const response = await fetch(`${API_BASE}/api/admin/salons/${slug}/members`, { credentials: 'include' })
+  const response = await authFetch(`${API_BASE}/api/admin/salons/${slug}/members`)
   if (!response.ok) {
     const message = await response.text()
     throw new Error(message || 'Falha ao carregar membros')
@@ -104,9 +116,8 @@ export async function fetchSalonMembers(slug: string) {
 }
 
 export async function updateSalonMember(slug: string, payload: { email: string; active?: number; role?: string }) {
-  const response = await fetch(`${API_BASE}/api/admin/salons/${slug}/members`, {
+  const response = await authFetch(`${API_BASE}/api/admin/salons/${slug}/members`, {
     method: 'PUT',
-    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   })
@@ -117,7 +128,7 @@ export async function updateSalonMember(slug: string, payload: { email: string; 
 }
 
 export async function validateSlug(slug: string) {
-  const response = await fetch(`${API_BASE}/api/admin/slug-check?slug=${slug}`, { credentials: 'include' })
+  const response = await authFetch(`${API_BASE}/api/admin/slug-check?slug=${slug}`)
   if (!response.ok) {
     const message = await response.text()
     throw new Error(message || 'Falha ao validar slug')
@@ -140,7 +151,7 @@ export async function createSalon(payload: { slug: string; name: string; city: s
 }
 
 export async function fetchMetrics(slug: string) {
-  const response = await fetch(`${API_BASE}/api/admin/metrics?salon=${slug}`, { credentials: 'include' })
+  const response = await authFetch(`${API_BASE}/api/admin/metrics?salon=${slug}`)
   if (!response.ok) {
     const message = await response.text()
     throw new Error(message || 'Falha ao carregar metricas')
@@ -149,9 +160,8 @@ export async function fetchMetrics(slug: string) {
 }
 
 export async function updateSalon(slug: string, payload: Partial<SalonProfile>) {
-  const response = await fetch(`${API_BASE}/api/salons/${slug}`, {
+  const response = await authFetch(`${API_BASE}/api/salons/${slug}`, {
     method: 'PATCH',
-    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   })
@@ -162,7 +172,7 @@ export async function updateSalon(slug: string, payload: Partial<SalonProfile>) 
 }
 
 export async function fetchServices(slug: string) {
-  const response = await fetch(`${API_BASE}/api/salons/${slug}/services`, { credentials: 'include' })
+  const response = await authFetch(`${API_BASE}/api/salons/${slug}/services`)
   if (!response.ok) {
     const message = await response.text()
     throw new Error(message || 'Falha ao carregar servicos')
@@ -171,9 +181,8 @@ export async function fetchServices(slug: string) {
 }
 
 export async function createService(slug: string, payload: { name: string; durationMinutes: number; priceCents: number }) {
-  const response = await fetch(`${API_BASE}/api/salons/${slug}/services`, {
+  const response = await authFetch(`${API_BASE}/api/salons/${slug}/services`, {
     method: 'POST',
-    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   })
@@ -185,7 +194,7 @@ export async function createService(slug: string, payload: { name: string; durat
 }
 
 export async function fetchStaff(slug: string) {
-  const response = await fetch(`${API_BASE}/api/salons/${slug}/staff`, { credentials: 'include' })
+  const response = await authFetch(`${API_BASE}/api/salons/${slug}/staff`)
   if (!response.ok) {
     const message = await response.text()
     throw new Error(message || 'Falha ao carregar equipe')
@@ -194,9 +203,8 @@ export async function fetchStaff(slug: string) {
 }
 
 export async function createStaff(slug: string, payload: { name: string; role: string }) {
-  const response = await fetch(`${API_BASE}/api/salons/${slug}/staff`, {
+  const response = await authFetch(`${API_BASE}/api/salons/${slug}/staff`, {
     method: 'POST',
-    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   })
@@ -208,7 +216,7 @@ export async function createStaff(slug: string, payload: { name: string; role: s
 }
 
 export async function fetchAppointments(slug: string) {
-  const response = await fetch(`${API_BASE}/api/salons/${slug}/appointments`, { credentials: 'include' })
+  const response = await authFetch(`${API_BASE}/api/salons/${slug}/appointments`)
   if (!response.ok) {
     const message = await response.text()
     throw new Error(message || 'Falha ao carregar agenda')
@@ -217,9 +225,8 @@ export async function fetchAppointments(slug: string) {
 }
 
 export async function createAppointment(slug: string, payload: { serviceId: string; staffId?: string; startsAt: string; notes?: string }) {
-  const response = await fetch(`${API_BASE}/api/salons/${slug}/appointments`, {
+  const response = await authFetch(`${API_BASE}/api/salons/${slug}/appointments`, {
     method: 'POST',
-    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   })
@@ -231,7 +238,7 @@ export async function createAppointment(slug: string, payload: { serviceId: stri
 }
 
 export async function fetchCustomers(slug: string) {
-  const response = await fetch(`${API_BASE}/api/salons/${slug}/customers`, { credentials: 'include' })
+  const response = await authFetch(`${API_BASE}/api/salons/${slug}/customers`)
   if (!response.ok) {
     const message = await response.text()
     throw new Error(message || 'Falha ao carregar clientes')
