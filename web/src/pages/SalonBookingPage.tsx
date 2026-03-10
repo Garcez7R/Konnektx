@@ -54,6 +54,10 @@ export default function SalonBookingPage() {
           >
             Entrar com Google
           </button>
+          <p className="legal-note">
+            Ao continuar, você concorda com o tratamento de dados conforme a
+            LGPD (Lei 13.709/2018) e o Marco Civil da Internet (Lei 12.965/2014).
+          </p>
         </div>
       )}
       {userName && (

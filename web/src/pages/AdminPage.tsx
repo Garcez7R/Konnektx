@@ -128,15 +128,21 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
           {userName ? (
             <span>Logado como {userName}</span>
           ) : (
-            <button
-              className="btn primary"
-              onClick={() => {
-                const redirect = encodeURIComponent(window.location.href)
-                window.location.href = `${API_BASE}/api/auth/google?redirect=${redirect}`
-              }}
-            >
-              Entrar com Google
-            </button>
+            <div>
+              <button
+                className="btn primary"
+                onClick={() => {
+                  const redirect = encodeURIComponent(window.location.href)
+                  window.location.href = `${API_BASE}/api/auth/google?redirect=${redirect}`
+                }}
+              >
+                Entrar com Google
+              </button>
+              <p className="legal-note">
+                Ao continuar, você concorda com o tratamento de dados conforme a
+                LGPD (Lei 13.709/2018) e o Marco Civil da Internet (Lei 12.965/2014).
+              </p>
+            </div>
           )}
         </div>
       </header>
