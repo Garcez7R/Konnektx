@@ -100,7 +100,7 @@ export default function HomePage() {
             <button
               className="btn ghost btn-icon"
               onClick={() => {
-                window.open('https://wa.me/551996263385', '_blank', 'noopener,noreferrer')
+                window.open('https://wa.me/5551996263385', '_blank', 'noopener,noreferrer')
               }}
             >
               <span className="icon">
@@ -220,7 +220,7 @@ export default function HomePage() {
           <button
             className="btn primary btn-icon"
             onClick={() => {
-              window.open('https://wa.me/551996263385', '_blank', 'noopener,noreferrer')
+              window.open('https://wa.me/5551996263385', '_blank', 'noopener,noreferrer')
             }}
           >
             <span className="icon">
