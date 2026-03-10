@@ -36,6 +36,7 @@ export default function HomePage() {
           <p className="hero-subtitle">
             A tecnologia dos grandes salões, simplificada para o seu negócio.
           </p>
+          <p className="hero-subtitle">Beauty as a Service para negócios locais.</p>
           <p className="hero-subtitle">
             Transforme sua barbearia ou salão em uma plataforma digital de alta
             performance. Tenha seu próprio link de agendamento online que
@@ -118,6 +119,42 @@ export default function HomePage() {
             <a className="btn primary" href="/app">
               Pronto para o primeiro uso
             </a>
+          </div>
+        </div>
+      </section>
+
+      <section className="section split">
+        <div>
+          <h2>Beauty as a Service</h2>
+          <p>
+            Você não assina apenas um software. Você recebe um negócio digital
+            em uma caixa: hospedagem, design premium e agendamento online.
+          </p>
+          <p>
+            Em poucos minutos, sua presença digital está pronta para vender
+            mais.
+          </p>
+        </div>
+        <div className="plans">
+          <div className="plan-card">
+            <h3>Plano Bronze</h3>
+            <p>Para o profissional individual.</p>
+            <ul className="list">
+              <li>Agenda + link próprio</li>
+              <li>Página personalizada</li>
+              <li>Suporte inicial</li>
+            </ul>
+            <div className="pill">Recorrência mensal</div>
+          </div>
+          <div className="plan-card highlight">
+            <h3>Plano Ouro</h3>
+            <p>Para barbearias com equipe.</p>
+            <ul className="list">
+              <li>Painel de funcionários</li>
+              <li>Fidelidade integrada</li>
+              <li>Relatórios do salão</li>
+            </ul>
+            <div className="pill">Escala e performance</div>
           </div>
         </div>
       </section>

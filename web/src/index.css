@@ -242,6 +242,25 @@ img {
   grid-column: 1 / -1;
 }
 
+.plans {
+  display: grid;
+  gap: 16px;
+}
+
+.plan-card {
+  background: var(--soft);
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 16px 30px rgba(5, 8, 7, 0.4);
+  display: grid;
+  gap: 8px;
+}
+
+.plan-card.highlight {
+  border: 1px solid rgba(245, 243, 236, 0.2);
+  background: linear-gradient(135deg, rgba(42, 107, 70, 0.2), rgba(193, 153, 58, 0.15));
+}
+
 .section {
   margin-top: 56px;
 }
