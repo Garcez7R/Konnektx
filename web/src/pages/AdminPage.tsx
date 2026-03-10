@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { API_BASE, addSalonMember, createService, createStaff, fetchAdminSalons, fetchAppointments, fetchCustomers, fetchMe, fetchMetrics, fetchSalon, fetchSalonMembers, fetchServices, fetchStaff, updateSalon, updateSalonMember } from '../lib/api'
 
 const tabs = ['dashboard', 'servicos', 'equipe', 'agenda', 'clientes', 'aparencia', 'config'] as const
@@ -122,6 +123,9 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
 
   return (
     <div className="page admin">
+      <Link className="back-link" to="/app">
+        Voltar ao painel do salão
+      </Link>
       {toast && <div className="toast">{toast}</div>}
       <header className="admin-header">
         <div>

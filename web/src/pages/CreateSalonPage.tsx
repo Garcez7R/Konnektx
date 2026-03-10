@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { API_BASE, createSalon, fetchMe, validateSlug } from '../lib/api'
 
 export default function CreateSalonPage() {
@@ -44,6 +45,9 @@ export default function CreateSalonPage() {
 
   return (
     <div className="page">
+      <Link className="back-link" to="/app/master">
+        Voltar ao admin master
+      </Link>
       <header className="admin-header">
         <div>
           <h1>Novo salão</h1>

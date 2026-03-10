@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { API_BASE, fetchMe } from '../lib/api'
 
 export default function GestorPage() {
@@ -20,6 +21,9 @@ export default function GestorPage() {
   if (!userName) {
     return (
       <div className="page">
+        <Link className="back-link" to="/app">
+          Voltar ao painel
+        </Link>
         <h1>Área do gestor</h1>
         <p>Entre com Google para acessar sua área de gestão.</p>
         <button
@@ -41,6 +45,9 @@ export default function GestorPage() {
 
   return (
     <div className="page">
+      <Link className="back-link" to="/app">
+        Voltar ao painel
+      </Link>
       <h1>Área do gestor</h1>
       <div className="grid">
         <div className="feature">
@@ -63,7 +70,7 @@ export default function GestorPage() {
           <button
             className="btn ghost"
             onClick={() => {
-              window.open('https://wa.me/551996263385', '_blank', 'noopener,noreferrer')
+              window.open('https://wa.me/5551996263385', '_blank', 'noopener,noreferrer')
             }}
           >
             Falar com suporte

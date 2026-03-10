@@ -113,6 +113,9 @@ export default function OwnerDashboardPage() {
 
   return (
     <div className="page admin">
+      <Link className="back-link" to="/">
+        Voltar para a home
+      </Link>
       {toast && <div className="toast">{toast}</div>}
       <header className="admin-header">
         <div>
