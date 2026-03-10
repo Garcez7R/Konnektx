@@ -481,6 +481,13 @@ img {
   margin-bottom: 24px;
 }
 
+.field-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
 .admin-toolbar select {
   margin-top: 6px;
   padding: 10px 12px;

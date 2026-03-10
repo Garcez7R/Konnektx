@@ -75,6 +75,7 @@ export default function HomePage() {
                 <Link to="/">Início</Link>
                 <Link to="/s/aurora">Ver demonstração</Link>
                 <a href="/app">Entrar no painel</a>
+                <a href="/app/master">Admin master</a>
                 <a href="/app/gestor">Área do gestor</a>
               </div>
             )}

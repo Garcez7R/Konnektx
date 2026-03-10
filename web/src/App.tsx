@@ -15,12 +15,14 @@ import AdminAppearancePage from './pages/AdminAppearancePage'
 import AdminConfigPage from './pages/AdminConfigPage'
 import AdminSupportPage from './pages/AdminSupportPage'
 import GestorPage from './pages/GestorPage'
+import OwnerDashboardPage from './pages/OwnerDashboardPage'
 
 export default function App() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/app" element={<AdminPage />} />
+      <Route path="/app" element={<OwnerDashboardPage />} />
+      <Route path="/app/master" element={<AdminPage />} />
       <Route path="/app/novo" element={<CreateSalonPage />} />
       <Route path="/app/agenda" element={<AdminAgendaPage />} />
       <Route path="/app/servicos" element={<AdminServicesPage />} />
