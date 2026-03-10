@@ -104,6 +104,23 @@ img {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-icon .icon {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+}
+
+.btn-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
 .btn.primary {
   background: linear-gradient(135deg, var(--accent), var(--accent-strong));
   color: #1a1a1a;
