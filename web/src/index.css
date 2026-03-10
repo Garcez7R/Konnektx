@@ -449,13 +449,15 @@ img {
 .tab {
   padding: 8px 14px;
   border-radius: 999px;
-  border: 1px solid rgba(245, 243, 236, 0.2);
-  background: transparent;
+  border: 1px solid rgba(245, 243, 236, 0.45);
+  background: rgba(245, 243, 236, 0.12);
   cursor: pointer;
+  color: var(--ink);
 }
 
 .tab.active {
-  background: rgba(245, 243, 236, 0.1);
+  background: rgba(193, 153, 58, 0.25);
+  border-color: rgba(193, 153, 58, 0.7);
   font-weight: 600;
 }
 
