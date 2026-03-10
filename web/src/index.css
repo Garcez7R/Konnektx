@@ -209,6 +209,11 @@ img {
   align-items: start;
 }
 
+.contact-section .glass-panel {
+  display: grid;
+  gap: 16px;
+}
+
 .list {
   list-style: none;
   padding: 0;
