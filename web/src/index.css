@@ -168,6 +168,11 @@ img {
   height: 100%;
 }
 
+.install-btn {
+  margin-top: 12px;
+  width: fit-content;
+}
+
 .btn.primary {
   background: linear-gradient(135deg, var(--accent), var(--accent-strong));
   color: #1a1a1a;

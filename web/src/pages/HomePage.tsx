@@ -1,4 +1,9 @@
 import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+
+type BeforeInstallPromptEvent = Event & {
+  prompt: () => Promise<void>
+}
 
 const highlights = [
   {
@@ -24,6 +29,17 @@ const highlights = [
 ]
 
 export default function HomePage() {
+  const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null)
+
+  useEffect(() => {
+    const handler = (event: Event) => {
+      event.preventDefault()
+      setInstallPrompt(event as BeforeInstallPromptEvent)
+    }
+    window.addEventListener('beforeinstallprompt', handler)
+    return () => window.removeEventListener('beforeinstallprompt', handler)
+  }, [])
+
   return (
     <div className="page">
       <header className="hero">
@@ -181,6 +197,17 @@ export default function HomePage() {
             </span>
             Chamar no WhatsApp
           </button>
+          {installPrompt && (
+            <button
+              className="btn ghost install-btn"
+              onClick={async () => {
+                await installPrompt.prompt()
+                setInstallPrompt(null)
+              }}
+            >
+              Instalar app
+            </button>
+          )}
         </div>
       </section>
     </div>
