@@ -16,8 +16,8 @@ export type SalonProfile = {
   name: string
   city: string
   tagline: string
-  logoUrl?: string
-  coverUrl?: string
+  logoUrl?: string | null
+  coverUrl?: string | null
   themePrimary?: string | null
   themeSecondary?: string | null
   templateKey?: string | null

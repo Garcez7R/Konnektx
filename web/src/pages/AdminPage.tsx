@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { API_BASE, createService, createStaff, fetchAdminSalons, fetchAppointments, fetchCustomers, fetchMe, fetchMetrics, fetchServices, fetchStaff, updateSalon } from '../lib/api'
+import { API_BASE, createService, createStaff, fetchAdminSalons, fetchAppointments, fetchCustomers, fetchMe, fetchMetrics, fetchSalon, fetchServices, fetchStaff, updateSalon } from '../lib/api'
 
 const tabs = ['dashboard', 'servicos', 'equipe', 'agenda', 'clientes', 'aparencia', 'config'] as const
 
@@ -27,8 +27,20 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
   const [customers, setCustomers] = useState<Array<{ id: string; name: string; email: string }>>([])
   const [metrics, setMetrics] = useState<{ appointments: number; customers: number } | null>(null)
   const [status, setStatus] = useState<string | null>(null)
-  const [logoPreview, setLogoPreview] = useState<string>('')
-  const [coverPreview, setCoverPreview] = useState<string>('')
+  const [toast, setToast] = useState<string | null>(null)
+
+  const [logoUrl, setLogoUrl] = useState<string>('')
+  const [coverUrl, setCoverUrl] = useState<string>('')
+  const [themePrimary, setThemePrimary] = useState<string>('')
+  const [themeSecondary, setThemeSecondary] = useState<string>('')
+  const [templateKey, setTemplateKey] = useState<string>('')
+
+  const [initialAppearance, setInitialAppearance] = useState({
+    logoUrl: '',
+    coverUrl: '',
+    themePrimary: '',
+    themeSecondary: '',
+  })
 
   useEffect(() => {
     if (initialTab) {
@@ -61,14 +73,42 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
     fetchAppointments(selectedSlug).then((data) => setAppointments(data.appointments)).catch(() => null)
     fetchCustomers(selectedSlug).then((data) => setCustomers(data.customers)).catch(() => null)
     fetchMetrics(selectedSlug).then((data) => setMetrics(data)).catch(() => null)
+    fetchSalon(selectedSlug)
+      .then((data) => {
+        const logo = data.logoUrl ?? ''
+        const cover = data.coverUrl ?? ''
+        const primary = data.themePrimary ?? ''
+        const secondary = data.themeSecondary ?? ''
+        setLogoUrl(logo)
+        setCoverUrl(cover)
+        setThemePrimary(primary)
+        setThemeSecondary(secondary)
+        setTemplateKey(data.templateKey ?? '')
+        setInitialAppearance({ logoUrl: logo, coverUrl: cover, themePrimary: primary, themeSecondary: secondary })
+      })
+      .catch(() => null)
   }, [selectedSlug])
+
+  useEffect(() => {
+    if (!toast) return
+    const timer = setTimeout(() => setToast(null), 2200)
+    return () => clearTimeout(timer)
+  }, [toast])
 
   const needsLogin = !userName
 
   const displayTabs = useMemo(() => tabs, [])
 
+  const checklist = [
+    { label: 'Logo', done: Boolean(logoUrl) },
+    { label: 'Capa', done: Boolean(coverUrl) },
+    { label: 'Cores', done: Boolean(themePrimary && themeSecondary) },
+    { label: 'Servicos', done: services.length > 0 },
+  ]
+
   return (
     <div className="page admin">
+      {toast && <div className="toast">{toast}</div>}
       <header className="admin-header">
         <div>
           <h1>Painel Konnektx</h1>
@@ -160,6 +200,7 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
                     await createService(selectedSlug, { name, durationMinutes: duration, priceCents: price })
                     const data = await fetchServices(selectedSlug)
                     setServices(data.services)
+                    setToast('Servico criado com sucesso')
                     setStatus('Servico criado')
                   }}
                 >
@@ -195,6 +236,7 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
                     await createStaff(selectedSlug, { name, role })
                     const data = await fetchStaff(selectedSlug)
                     setStaff(data.staff)
+                    setToast('Equipe atualizada')
                     setStatus('Profissional criado')
                   }}
                 >
@@ -238,38 +280,43 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
 
           {activeTab === 'aparencia' && (
             <div className="admin-list">
+              <div className="progress-card">
+                <h3>Seu salao esta ficando pronto</h3>
+                <ul className="checklist">
+                  {checklist.map((item) => (
+                    <li key={item.label} className={item.done ? 'done' : ''}>
+                      <span>{item.done ? '✓' : '•'}</span>
+                      {item.label}
+                    </li>
+                  ))}
+                </ul>
+              </div>
               <div className="booking-card">
                 <strong>Aparencia do salao</strong>
                 <label>Logo (URL)</label>
-                <input
-                  id="logo-url"
-                  placeholder="https://..."
-                  onChange={(event) => setLogoPreview(event.target.value)}
-                />
+                <input value={logoUrl} onChange={(event) => setLogoUrl(event.target.value)} />
                 <label>Capa (URL)</label>
-                <input
-                  id="cover-url"
-                  placeholder="https://..."
-                  onChange={(event) => setCoverPreview(event.target.value)}
-                />
+                <input value={coverUrl} onChange={(event) => setCoverUrl(event.target.value)} />
                 <div className="preview-grid">
-                  {logoPreview && (
-                    <div className="preview-card">
-                      <span>Logo</span>
-                      <img src={logoPreview} alt="Preview logo" />
+                  <div className="preview-card">
+                    <span>Antes</span>
+                    <div className="preview-surface">
+                      {initialAppearance.logoUrl && <img src={initialAppearance.logoUrl} alt="Logo" />}
+                      {initialAppearance.coverUrl && <img src={initialAppearance.coverUrl} alt="Capa" />}
                     </div>
-                  )}
-                  {coverPreview && (
-                    <div className="preview-card">
-                      <span>Capa</span>
-                      <img src={coverPreview} alt="Preview capa" />
+                  </div>
+                  <div className="preview-card">
+                    <span>Depois</span>
+                    <div className="preview-surface">
+                      {logoUrl && <img src={logoUrl} alt="Preview logo" />}
+                      {coverUrl && <img src={coverUrl} alt="Preview capa" />}
                     </div>
-                  )}
+                  </div>
                 </div>
                 <label>Cor principal</label>
-                <input id="theme-primary" placeholder="#2a6b46" />
+                <input value={themePrimary} onChange={(event) => setThemePrimary(event.target.value)} placeholder="#2a6b46" />
                 <label>Cor secundaria</label>
-                <input id="theme-secondary" placeholder="#c1993a" />
+                <input value={themeSecondary} onChange={(event) => setThemeSecondary(event.target.value)} placeholder="#c1993a" />
                 <label>Template</label>
                 <div className="template-grid">
                   {templates.map((template) => (
@@ -277,12 +324,9 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
                       key={template.key}
                       className="template-card"
                       onClick={() => {
-                        const input = document.getElementById('template-key') as HTMLInputElement
-                        if (input) input.value = template.key
-                        const primaryInput = document.getElementById('theme-primary') as HTMLInputElement
-                        const secondaryInput = document.getElementById('theme-secondary') as HTMLInputElement
-                        if (primaryInput) primaryInput.value = template.primary
-                        if (secondaryInput) secondaryInput.value = template.secondary
+                        setTemplateKey(template.key)
+                        setThemePrimary(template.primary)
+                        setThemeSecondary(template.secondary)
                       }}
                     >
                       <div
@@ -293,15 +337,10 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
                     </button>
                   ))}
                 </div>
-                <input id="template-key" placeholder="aurora" />
+                <input value={templateKey} onChange={(event) => setTemplateKey(event.target.value)} placeholder="aurora" />
                 <button
                   className="btn primary"
                   onClick={async () => {
-                    const logoUrl = (document.getElementById('logo-url') as HTMLInputElement)?.value
-                    const coverUrl = (document.getElementById('cover-url') as HTMLInputElement)?.value
-                    const themePrimary = (document.getElementById('theme-primary') as HTMLInputElement)?.value
-                    const themeSecondary = (document.getElementById('theme-secondary') as HTMLInputElement)?.value
-                    const templateKey = (document.getElementById('template-key') as HTMLInputElement)?.value
                     await updateSalon(selectedSlug, {
                       logoUrl: logoUrl || null,
                       coverUrl: coverUrl || null,
@@ -309,7 +348,14 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
                       themeSecondary: themeSecondary || null,
                       templateKey: templateKey || null,
                     })
+                    setToast('Seu salao ganhou vida')
                     setStatus('Aparencia atualizada')
+                    setInitialAppearance({
+                      logoUrl,
+                      coverUrl,
+                      themePrimary,
+                      themeSecondary,
+                    })
                   }}
                 >
                   Salvar

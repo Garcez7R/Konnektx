@@ -1,4 +1,5 @@
-import { CSSProperties, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import type { CSSProperties } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { API_BASE, fetchMe, fetchSalon, logout } from '../lib/api'
 import type { SalonProfile } from '../lib/api'
@@ -63,7 +64,12 @@ export default function SalonPage() {
 
   const selectedTemplate = profile.templateKey ? templateTheme[profile.templateKey as keyof typeof templateTheme] : undefined
 
-  const themeStyle: CSSProperties = {
+  type ThemeStyle = CSSProperties & {
+    '--accent'?: string
+    '--accent-strong'?: string
+  }
+
+  const themeStyle: ThemeStyle = {
     '--accent': profile.themePrimary || selectedTemplate?.primary || undefined,
     '--accent-strong': profile.themeSecondary || selectedTemplate?.secondary || undefined,
   }
