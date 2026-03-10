@@ -1,6 +1,16 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { API_BASE, fetchMe, fetchSalon, fetchServices, fetchStaff } from '../lib/api'
+import {
+  API_BASE,
+  createService,
+  createStaff,
+  fetchMe,
+  fetchOwnerSalons,
+  fetchSalon,
+  fetchServices,
+  fetchStaff,
+  updateSalon,
+} from '../lib/api'
 import type { SalonProfile } from '../lib/api'
 
 export default function OwnerDashboardPage() {
@@ -8,10 +18,31 @@ export default function OwnerDashboardPage() {
   const [userRole, setUserRole] = useState<string | null>(null)
   const [slugInput, setSlugInput] = useState('')
   const [activeSlug, setActiveSlug] = useState('')
+  const [ownerSalons, setOwnerSalons] = useState<Array<{ id: string; slug: string; name: string; city: string; role: string }>>([])
   const [profile, setProfile] = useState<SalonProfile | null>(null)
   const [services, setServices] = useState<Array<{ id: string; name: string; durationMinutes: number; priceCents: number }>>([])
   const [staff, setStaff] = useState<Array<{ id: string; name: string; role: string }>>([])
   const [error, setError] = useState<string | null>(null)
+  const [status, setStatus] = useState<string | null>(null)
+  const [toast, setToast] = useState<string | null>(null)
+
+  const [logoUrl, setLogoUrl] = useState('')
+  const [coverUrl, setCoverUrl] = useState('')
+  const [themePrimary, setThemePrimary] = useState('')
+  const [themeSecondary, setThemeSecondary] = useState('')
+  const [templateKey, setTemplateKey] = useState('')
+
+  const [serviceName, setServiceName] = useState('')
+  const [serviceDuration, setServiceDuration] = useState('')
+  const [servicePrice, setServicePrice] = useState('')
+  const [staffName, setStaffName] = useState('')
+  const [staffRole, setStaffRole] = useState('')
+
+  const templates = [
+    { key: 'aurora', name: 'Aurora', primary: '#2a6b46', secondary: '#c1993a' },
+    { key: 'noir', name: 'Noir', primary: '#1f3b3f', secondary: '#8b6b2f' },
+    { key: 'clean', name: 'Clean', primary: '#2d6a6a', secondary: '#c9a33a' },
+  ]
 
   useEffect(() => {
     const stored = localStorage.getItem('owner_slug') || 'aurora'
@@ -32,10 +63,30 @@ export default function OwnerDashboardPage() {
   }, [])
 
   useEffect(() => {
+    if (!userName) return
+    fetchOwnerSalons()
+      .then((data) => {
+        setOwnerSalons(data.salons)
+        if (data.salons.length && !activeSlug) {
+          setActiveSlug(data.salons[0].slug)
+          setSlugInput(data.salons[0].slug)
+        }
+      })
+      .catch(() => setOwnerSalons([]))
+  }, [userName, activeSlug])
+
+  useEffect(() => {
     if (!activeSlug) return
     setError(null)
     fetchSalon(activeSlug)
-      .then(setProfile)
+      .then((data) => {
+        setProfile(data)
+        setLogoUrl(data.logoUrl ?? '')
+        setCoverUrl(data.coverUrl ?? '')
+        setThemePrimary(data.themePrimary ?? '')
+        setThemeSecondary(data.themeSecondary ?? '')
+        setTemplateKey(data.templateKey ?? '')
+      })
       .catch((err) => setError(err.message || 'Falha ao carregar o salão.'))
     fetchServices(activeSlug)
       .then((data) => setServices(data.services))
@@ -45,12 +96,19 @@ export default function OwnerDashboardPage() {
       .catch(() => setStaff([]))
   }, [activeSlug])
 
+  useEffect(() => {
+    if (!toast) return
+    const timer = setTimeout(() => setToast(null), 2200)
+    return () => clearTimeout(timer)
+  }, [toast])
+
   const formattedSlug = useMemo(() => activeSlug.trim(), [activeSlug])
 
   const needsLogin = !userName
 
   return (
     <div className="page admin">
+      {toast && <div className="toast">{toast}</div>}
       <header className="admin-header">
         <div>
           <h1>Painel do salão</h1>
@@ -88,28 +146,50 @@ export default function OwnerDashboardPage() {
       )}
 
       <div className="admin-toolbar">
-        <label>
-          Seu slug
-          <div className="field-row">
-            <input
-              value={slugInput}
-              onChange={(event) => setSlugInput(event.target.value)}
-              placeholder="ex: salao-aurora"
-              disabled={needsLogin}
-            />
-            <button
-              className="btn ghost"
-              disabled={!slugInput || needsLogin}
-              onClick={() => {
-                const next = slugInput.trim().toLowerCase()
+        {ownerSalons.length > 0 ? (
+          <label>
+            Seu salão
+            <select
+              value={activeSlug}
+              onChange={(event) => {
+                const next = event.target.value
                 setActiveSlug(next)
+                setSlugInput(next)
                 localStorage.setItem('owner_slug', next)
               }}
+              disabled={needsLogin}
             >
-              Carregar
-            </button>
-          </div>
-        </label>
+              {ownerSalons.map((salon) => (
+                <option key={salon.id} value={salon.slug}>
+                  {salon.name} · {salon.city}
+                </option>
+              ))}
+            </select>
+          </label>
+        ) : (
+          <label>
+            Seu slug
+            <div className="field-row">
+              <input
+                value={slugInput}
+                onChange={(event) => setSlugInput(event.target.value)}
+                placeholder="ex: salao-aurora"
+                disabled={needsLogin}
+              />
+              <button
+                className="btn ghost"
+                disabled={!slugInput || needsLogin}
+                onClick={() => {
+                  const next = slugInput.trim().toLowerCase()
+                  setActiveSlug(next)
+                  localStorage.setItem('owner_slug', next)
+                }}
+              >
+                Carregar
+              </button>
+            </div>
+          </label>
+        )}
         {formattedSlug && (
           <a className="pill" href={`/s/${formattedSlug}`} target="_blank" rel="noreferrer">
             Abrir página pública
@@ -142,7 +222,46 @@ export default function OwnerDashboardPage() {
           <div className="section grid">
             <div className="section-title">
               <h2>Serviços ativos</h2>
-              <p>Atualizações de serviços ficam disponíveis via suporte Konnektx.</p>
+              <p>Adicione e organize seus serviços principais.</p>
+            </div>
+            <div className="booking-card">
+              <strong>Novo serviço</strong>
+              <label>Nome</label>
+              <input value={serviceName} onChange={(event) => setServiceName(event.target.value)} />
+              <label>Duração (min)</label>
+              <input
+                type="number"
+                value={serviceDuration}
+                onChange={(event) => setServiceDuration(event.target.value)}
+              />
+              <label>Preço (centavos)</label>
+              <input
+                type="number"
+                value={servicePrice}
+                onChange={(event) => setServicePrice(event.target.value)}
+              />
+              <button
+                className="btn primary"
+                onClick={async () => {
+                  if (!serviceName || !serviceDuration || !servicePrice) return
+                  setStatus('Salvando serviço...')
+                  await createService(profile.slug, {
+                    name: serviceName,
+                    durationMinutes: Number(serviceDuration),
+                    priceCents: Number(servicePrice),
+                  })
+                  const data = await fetchServices(profile.slug)
+                  setServices(data.services)
+                  setServiceName('')
+                  setServiceDuration('')
+                  setServicePrice('')
+                  setToast('Serviço criado com sucesso')
+                  setStatus(null)
+                }}
+              >
+                Salvar
+              </button>
+              {status && <span>{status}</span>}
             </div>
             {services.map((service) => (
               <article key={service.id} className="feature">
@@ -157,7 +276,31 @@ export default function OwnerDashboardPage() {
           <div className="section grid">
             <div className="section-title">
               <h2>Equipe</h2>
-              <p>Gerencie sua equipe pelo suporte Konnektx sempre que precisar.</p>
+              <p>Cadastre profissionais e deixe o salão organizado.</p>
+            </div>
+            <div className="booking-card">
+              <strong>Novo profissional</strong>
+              <label>Nome</label>
+              <input value={staffName} onChange={(event) => setStaffName(event.target.value)} />
+              <label>Função</label>
+              <input value={staffRole} onChange={(event) => setStaffRole(event.target.value)} />
+              <button
+                className="btn primary"
+                onClick={async () => {
+                  if (!staffName || !staffRole) return
+                  setStatus('Salvando profissional...')
+                  await createStaff(profile.slug, { name: staffName, role: staffRole })
+                  const data = await fetchStaff(profile.slug)
+                  setStaff(data.staff)
+                  setStaffName('')
+                  setStaffRole('')
+                  setToast('Equipe atualizada')
+                  setStatus(null)
+                }}
+              >
+                Salvar
+              </button>
+              {status && <span>{status}</span>}
             </div>
             {staff.map((person) => (
               <article key={person.id} className="feature">
@@ -170,12 +313,52 @@ export default function OwnerDashboardPage() {
           <div className="section split">
             <div>
               <h2>Aparência</h2>
-              <p>Confira sua logo, capa e o template configurado.</p>
-              <div className="pill">Template {profile.templateKey || 'padrão'}</div>
+              <p>Atualize logo, capa, cores e template do seu salão.</p>
+              <div className="pill">Template {templateKey || 'padrão'}</div>
             </div>
             <div className="glass-panel preview-surface">
-              <img src={profile.logoUrl || '/pwa-192.png'} alt="Logo do salão" />
-              <img src={profile.coverUrl || '/cover-placeholder.svg'} alt="Capa do salão" />
+              <label>Logo (URL)</label>
+              <input value={logoUrl} onChange={(event) => setLogoUrl(event.target.value)} />
+              <label>Capa (URL)</label>
+              <input value={coverUrl} onChange={(event) => setCoverUrl(event.target.value)} />
+              <div className="color-inputs">
+                <label>
+                  Primária
+                  <input type="color" value={themePrimary || '#002d20'} onChange={(event) => setThemePrimary(event.target.value)} />
+                </label>
+                <label>
+                  Secundária
+                  <input type="color" value={themeSecondary || '#c5a059'} onChange={(event) => setThemeSecondary(event.target.value)} />
+                </label>
+              </div>
+              <label>Template</label>
+              <select value={templateKey} onChange={(event) => setTemplateKey(event.target.value)}>
+                <option value="">Selecione</option>
+                {templates.map((template) => (
+                  <option key={template.key} value={template.key}>
+                    {template.name}
+                  </option>
+                ))}
+              </select>
+              <button
+                className="btn primary"
+                onClick={async () => {
+                  setStatus('Salvando aparência...')
+                  await updateSalon(profile.slug, {
+                    logoUrl: logoUrl || null,
+                    coverUrl: coverUrl || null,
+                    themePrimary: themePrimary || null,
+                    themeSecondary: themeSecondary || null,
+                    templateKey: templateKey || null,
+                  })
+                  setToast('Aparência atualizada')
+                  setStatus(null)
+                }}
+              >
+                Salvar aparência
+              </button>
+              <img src={logoUrl || '/pwa-192.png'} alt="Logo do salão" />
+              <img src={coverUrl || '/cover-placeholder.svg'} alt="Capa do salão" />
             </div>
           </div>
 

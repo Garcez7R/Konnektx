@@ -136,6 +136,27 @@ function requirePlatformAdmin(user: SessionUser | null) {
   return null
 }
 
+function requireSalonAccess(user: SessionUser | null, memberRole?: string | null) {
+  if (!user) {
+    return jsonResponse({ error: 'Nao autenticado' }, { status: 401 })
+  }
+  if (user.role === 'platform_admin') {
+    return null
+  }
+  if (!memberRole) {
+    return jsonResponse({ error: 'Sem permissao' }, { status: 403 })
+  }
+  return null
+}
+
+async function getSalonMemberRole(env: Env, salonId: string, userId: string) {
+  return env.DB.prepare(
+    'SELECT role FROM salon_members WHERE salon_id = ? AND user_id = ? AND active = 1 LIMIT 1'
+  )
+    .bind(salonId, userId)
+    .first<{ role: string }>()
+}
+
 async function getSalonBySlug(env: Env, slug: string) {
   return env.DB.prepare(
     'SELECT id, slug, name, city, tagline, logo_url as logoUrl, cover_url as coverUrl, theme_primary as themePrimary, theme_secondary as themeSecondary, template_key as templateKey FROM salons WHERE slug = ? LIMIT 1'
@@ -368,12 +389,13 @@ export default {
     if (salonMatch && request.method === 'PATCH') {
       const slug = salonMatch[1].toLowerCase()
       const user = await getSessionUser(request, env)
-      const authError = requirePlatformAdmin(user)
-      if (authError) return jsonResponse(await authError.json(), { status: authError.status, headers: corsHeaders })
       const salon = await getSalonBySlug(env, slug)
       if (!salon) {
         return jsonResponse({ error: 'Salao nao encontrado' }, { status: 404, headers: corsHeaders })
       }
+      const memberRole = user ? await getSalonMemberRole(env, salon.id, user.id) : null
+      const authError = requireSalonAccess(user, memberRole?.role)
+      if (authError) return jsonResponse(await authError.json(), { status: authError.status, headers: corsHeaders })
       const body = await readBody<{
         name?: string
         city?: string
@@ -409,7 +431,9 @@ export default {
       const salon = await getSalonBySlug(env, slug)
       if (!salon) return jsonResponse({ error: 'Salao nao encontrado' }, { status: 404, headers: corsHeaders })
       const user = await getSessionUser(request, env)
-      const authError = requirePlatformAdmin(user)
+      const memberRole = user ? await getSalonMemberRole(env, salon.id, user.id) : null
+      const authError = requireSalonAccess(user, memberRole?.role)
+      if (authError) return jsonResponse(await authError.json(), { status: authError.status, headers: corsHeaders })
       if (request.method === 'GET') {
         const services = await env.DB.prepare(
           'SELECT id, name, duration_minutes as durationMinutes, price_cents as priceCents, active, sort_order as sortOrder FROM services WHERE salon_id = ? ORDER BY sort_order ASC'
@@ -418,7 +442,6 @@ export default {
           .all()
         return jsonResponse({ services: services.results ?? [] }, { headers: corsHeaders })
       }
-      if (authError) return jsonResponse(await authError.json(), { status: authError.status, headers: corsHeaders })
       if (request.method === 'POST') {
         const body = await readBody<{ name: string; durationMinutes: number; priceCents: number }>(request)
         const id = `svc_${crypto.randomUUID()}`
@@ -451,7 +474,9 @@ export default {
       const salon = await getSalonBySlug(env, slug)
       if (!salon) return jsonResponse({ error: 'Salao nao encontrado' }, { status: 404, headers: corsHeaders })
       const user = await getSessionUser(request, env)
-      const authError = requirePlatformAdmin(user)
+      const memberRole = user ? await getSalonMemberRole(env, salon.id, user.id) : null
+      const authError = requireSalonAccess(user, memberRole?.role)
+      if (authError) return jsonResponse(await authError.json(), { status: authError.status, headers: corsHeaders })
       if (request.method === 'GET') {
         const staff = await env.DB.prepare(
           'SELECT id, name, role, active FROM staff WHERE salon_id = ? ORDER BY name ASC'
@@ -460,7 +485,6 @@ export default {
           .all()
         return jsonResponse({ staff: staff.results ?? [] }, { headers: corsHeaders })
       }
-      if (authError) return jsonResponse(await authError.json(), { status: authError.status, headers: corsHeaders })
       if (request.method === 'POST') {
         const body = await readBody<{ name: string; role: string }>(request)
         const id = `staff_${crypto.randomUUID()}`
@@ -521,7 +545,8 @@ export default {
         return jsonResponse({ id }, { status: 201, headers: corsHeaders })
       }
       if (request.method === 'GET') {
-        const authError = requirePlatformAdmin(user)
+        const memberRole = user ? await getSalonMemberRole(env, salon.id, user.id) : null
+        const authError = requireSalonAccess(user, memberRole?.role)
         if (authError) return jsonResponse(await authError.json(), { status: authError.status, headers: corsHeaders })
         const appts = await env.DB.prepare(
           'SELECT a.id, a.starts_at as startsAt, a.ends_at as endsAt, a.status, s.name as serviceName, u.name as customerName FROM appointments a LEFT JOIN services s ON a.service_id = s.id LEFT JOIN users u ON a.customer_id = u.id WHERE a.salon_id = ? ORDER BY a.starts_at DESC LIMIT 200'
@@ -538,7 +563,8 @@ export default {
       const salon = await getSalonBySlug(env, slug)
       if (!salon) return jsonResponse({ error: 'Salao nao encontrado' }, { status: 404, headers: corsHeaders })
       const user = await getSessionUser(request, env)
-      const authError = requirePlatformAdmin(user)
+      const memberRole = user ? await getSalonMemberRole(env, salon.id, user.id) : null
+      const authError = requireSalonAccess(user, memberRole?.role)
       if (authError) return jsonResponse(await authError.json(), { status: authError.status, headers: corsHeaders })
       const customers = await env.DB.prepare(
         'SELECT DISTINCT u.id, u.name, u.email FROM users u INNER JOIN appointments a ON a.customer_id = u.id WHERE a.salon_id = ? ORDER BY u.name'
@@ -546,6 +572,62 @@ export default {
         .bind(salon.id)
         .all()
       return jsonResponse({ customers: customers.results ?? [] }, { headers: corsHeaders })
+    }
+
+    if (pathname === '/api/owner/salons') {
+      const user = await getSessionUser(request, env)
+      const authError = requireAuth(user)
+      if (authError) return jsonResponse(await authError.json(), { status: authError.status, headers: corsHeaders })
+      const rows = await env.DB.prepare(
+        'SELECT s.id, s.slug, s.name, s.city, m.role FROM salons s INNER JOIN salon_members m ON m.salon_id = s.id WHERE m.user_id = ? AND m.active = 1 ORDER BY s.name ASC'
+      )
+        .bind(user?.id)
+        .all<{ id: string; slug: string; name: string; city: string; role: string }>()
+      return jsonResponse({ salons: rows.results ?? [] }, { headers: corsHeaders })
+    }
+
+    const memberMatch = pathname.match(/^\/api\/admin\/salons\/([a-z0-9-]+)\/members$/i)
+    if (memberMatch) {
+      const slug = memberMatch[1].toLowerCase()
+      const user = await getSessionUser(request, env)
+      const authError = requirePlatformAdmin(user)
+      if (authError) return jsonResponse(await authError.json(), { status: authError.status, headers: corsHeaders })
+      const salon = await getSalonBySlug(env, slug)
+      if (!salon) return jsonResponse({ error: 'Salao nao encontrado' }, { status: 404, headers: corsHeaders })
+      if (request.method === 'GET') {
+        const members = await env.DB.prepare(
+          'SELECT u.email, u.name, m.role, m.active FROM salon_members m INNER JOIN users u ON u.id = m.user_id WHERE m.salon_id = ? ORDER BY u.email'
+        )
+          .bind(salon.id)
+          .all()
+        return jsonResponse({ members: members.results ?? [] }, { headers: corsHeaders })
+      }
+      if (request.method === 'POST') {
+        const body = await readBody<{ email: string; role?: string }>(request)
+        const email = body.email?.toLowerCase().trim()
+        if (!email) return jsonResponse({ error: 'Email obrigatorio' }, { status: 400, headers: corsHeaders })
+        const role = body.role?.trim() || 'owner'
+        let existingUser = await env.DB.prepare('SELECT id FROM users WHERE email = ? LIMIT 1')
+          .bind(email)
+          .first<{ id: string }>()
+        if (!existingUser) {
+          const id = `user_${crypto.randomUUID()}`
+          const name = email.split('@')[0]
+          await env.DB.prepare(
+            'INSERT INTO users (id, email, name, role, created_at) VALUES (?, ?, ?, ?, datetime("now"))'
+          )
+            .bind(id, email, name, 'customer')
+            .run()
+          existingUser = { id }
+        }
+        const memberId = `member_${crypto.randomUUID()}`
+        await env.DB.prepare(
+          'INSERT INTO salon_members (id, salon_id, user_id, role, active, created_at) VALUES (?, ?, ?, ?, 1, datetime("now")) ON CONFLICT(salon_id, user_id) DO UPDATE SET role = excluded.role, active = 1'
+        )
+          .bind(memberId, salon.id, existingUser.id, role)
+          .run()
+        return jsonResponse({ ok: true }, { headers: corsHeaders })
+      }
     }
 
     if (pathname === '/api/admin/salons') {
@@ -601,11 +683,12 @@ export default {
 
     if (pathname === '/api/admin/metrics') {
       const user = await getSessionUser(request, env)
-      const authError = requirePlatformAdmin(user)
-      if (authError) return jsonResponse(await authError.json(), { status: authError.status, headers: corsHeaders })
       const slug = searchParams.get('salon') || ''
       const salon = await getSalonBySlug(env, slug)
       if (!salon) return jsonResponse({ error: 'Salao nao encontrado' }, { status: 404, headers: corsHeaders })
+      const memberRole = user ? await getSalonMemberRole(env, salon.id, user.id) : null
+      const authError = requireSalonAccess(user, memberRole?.role)
+      if (authError) return jsonResponse(await authError.json(), { status: authError.status, headers: corsHeaders })
       const apptCount = await env.DB.prepare('SELECT COUNT(*) as total FROM appointments WHERE salon_id = ?')
         .bind(salon.id)
         .first<{ total: number }>()

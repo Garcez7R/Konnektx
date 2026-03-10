@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { API_BASE, createService, createStaff, fetchAdminSalons, fetchAppointments, fetchCustomers, fetchMe, fetchMetrics, fetchSalon, fetchServices, fetchStaff, updateSalon } from '../lib/api'
+import { API_BASE, addSalonMember, createService, createStaff, fetchAdminSalons, fetchAppointments, fetchCustomers, fetchMe, fetchMetrics, fetchSalon, fetchServices, fetchStaff, updateSalon } from '../lib/api'
 
 const tabs = ['dashboard', 'servicos', 'equipe', 'agenda', 'clientes', 'aparencia', 'config'] as const
 
@@ -44,6 +44,8 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
   const [themePrimary, setThemePrimary] = useState<string>('')
   const [themeSecondary, setThemeSecondary] = useState<string>('')
   const [templateKey, setTemplateKey] = useState<string>('')
+  const [memberEmail, setMemberEmail] = useState<string>('')
+  const [memberRole, setMemberRole] = useState<string>('owner')
 
   const [initialAppearance, setInitialAppearance] = useState({
     logoUrl: '',
@@ -382,14 +384,42 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
           )}
 
           {activeTab === 'config' && (
-            <div className="glass-panel">
-              <p>Configurações gerais do salão (horários, políticas, etc.)</p>
-              <a className="btn primary" href={`/s/${selectedSlug}`} target="_blank" rel="noreferrer">
-                Abrir página do salão
-              </a>
-              <a className="btn ghost" href="/app/gestor">
-                Área do gestor
-              </a>
+            <div className="admin-list">
+              <div className="glass-panel">
+                <p>Configurações gerais do salão (horários, políticas, etc.)</p>
+                <a className="btn primary" href={`/s/${selectedSlug}`} target="_blank" rel="noreferrer">
+                  Abrir página do salão
+                </a>
+                <a className="btn ghost" href="/app/gestor">
+                  Área do gestor
+                </a>
+              </div>
+              <div className="booking-card">
+                <strong>Acessos do salão</strong>
+                <label>E-mail do dono</label>
+                <input
+                  value={memberEmail}
+                  onChange={(event) => setMemberEmail(event.target.value)}
+                  placeholder="dono@salao.com"
+                />
+                <label>Perfil</label>
+                <select value={memberRole} onChange={(event) => setMemberRole(event.target.value)}>
+                  <option value="owner">Dono</option>
+                  <option value="manager">Gerente</option>
+                  <option value="staff">Equipe</option>
+                </select>
+                <button
+                  className="btn primary"
+                  onClick={async () => {
+                    if (!memberEmail) return
+                    await addSalonMember(selectedSlug, { email: memberEmail, role: memberRole })
+                    setToast('Acesso concedido ao salão')
+                    setMemberEmail('')
+                  }}
+                >
+                  Conceder acesso
+                </button>
+              </div>
             </div>
           )}
         </section>

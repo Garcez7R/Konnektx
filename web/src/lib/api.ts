@@ -72,6 +72,28 @@ export async function fetchAdminSalons() {
   return response.json() as Promise<{ salons: Array<{ id: string; slug: string; name: string; city: string }> }>
 }
 
+export async function fetchOwnerSalons() {
+  const response = await fetch(`${API_BASE}/api/owner/salons`, { credentials: 'include' })
+  if (!response.ok) {
+    const message = await response.text()
+    throw new Error(message || 'Falha ao carregar saloes')
+  }
+  return response.json() as Promise<{ salons: Array<{ id: string; slug: string; name: string; city: string; role: string }> }>
+}
+
+export async function addSalonMember(slug: string, payload: { email: string; role?: string }) {
+  const response = await fetch(`${API_BASE}/api/admin/salons/${slug}/members`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  })
+  if (!response.ok) {
+    const message = await response.text()
+    throw new Error(message || 'Falha ao vincular usuario')
+  }
+}
+
 export async function validateSlug(slug: string) {
   const response = await fetch(`${API_BASE}/api/admin/slug-check?slug=${slug}`, { credentials: 'include' })
   if (!response.ok) {

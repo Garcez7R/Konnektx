@@ -622,6 +622,20 @@ img {
   gap: 8px;
 }
 
+.color-inputs {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.color-inputs input[type='color'] {
+  width: 52px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+
 .toast {
   position: fixed;
   top: 24px;
