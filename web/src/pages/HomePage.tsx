@@ -109,7 +109,7 @@ export default function HomePage() {
         <div className="hero-card">
           <div className="card-glow" />
           <div className="card-body">
-            <p className="card-title">Exemplo: Salão Aurora</p>
+            <p className="card-title">Salão Aurora</p>
             <p className="card-subtitle">Centro, Pelotas - RS</p>
             <div className="card-badges">
               <span>Agenda online 24h</span>
