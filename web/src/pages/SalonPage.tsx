@@ -69,7 +69,14 @@ export default function SalonPage() {
             >
               Agendar horario
             </button>
-            <button className="btn ghost">Entrar no clube</button>
+            <button
+              className="btn ghost"
+              onClick={() => {
+                window.open('https://wa.me/551996263385', '_blank', 'noopener,noreferrer')
+              }}
+            >
+              Falar com a equipe
+            </button>
           </div>
         </div>
         <div className="salon-hero-media">
