@@ -29,7 +29,7 @@ export default function HomePage() {
       <header className="hero">
         <div className="hero-content">
           <p className="eyebrow brand">
-            <img className="brand-icon" src="/mda.png" alt="" />
+            <img className="brand-icon" src="/pwa-192.png" alt="" />
             KONNEKTX
           </p>
           <h1>Brilho local, gestão de elite.</h1>
