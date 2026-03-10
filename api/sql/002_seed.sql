@@ -3,7 +3,7 @@ VALUES (
   'salon_aurora',
   'aurora',
   'Salao Aurora',
-  'Itajuba - MG',
+  'Pelotas - RS',
   'Cortes modernos, luz natural e experiencia premium.',
   NULL,
   NULL,

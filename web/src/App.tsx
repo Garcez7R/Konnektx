@@ -5,6 +5,7 @@ import AdminPage from './pages/AdminPage'
 import CreateSalonPage from './pages/CreateSalonPage'
 import SalonBookingPage from './pages/SalonBookingPage'
 import SalonConfirmedPage from './pages/SalonConfirmedPage'
+import SalonProfilePage from './pages/SalonProfilePage'
 import AdminAgendaPage from './pages/AdminAgendaPage'
 import AdminServicesPage from './pages/AdminServicesPage'
 import AdminStaffPage from './pages/AdminStaffPage'
@@ -29,6 +30,7 @@ export default function App() {
       <Route path="/s/:slug" element={<SalonPage />} />
       <Route path="/s/:slug/agendar" element={<SalonBookingPage />} />
       <Route path="/s/:slug/confirmado" element={<SalonConfirmedPage />} />
+      <Route path="/s/:slug/perfil" element={<SalonProfilePage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )

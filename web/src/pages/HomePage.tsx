@@ -47,13 +47,16 @@ export default function HomePage() {
           <div className="card-glow" />
           <div className="card-body">
             <p className="card-title">Salao Aurora</p>
-            <p className="card-subtitle">Centro, Itajuba - MG</p>
+            <p className="card-subtitle">Centro, Pelotas - RS</p>
             <div className="card-badges">
               <span>Agenda online</span>
               <span>Fidelidade ativa</span>
               <span>Equipe completa</span>
             </div>
           </div>
+        </div>
+        <div className="hero-mock">
+          <img src="/mock.jpg" alt="Preview do PWA Konnektx" />
         </div>
       </header>
 

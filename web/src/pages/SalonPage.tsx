@@ -80,7 +80,7 @@ export default function SalonPage() {
         Voltar para home
       </Link>
 
-      <section className="salon-hero">
+      <section className="salon-hero" id="inicio">
         <div className="salon-hero-text">
           <p className="eyebrow">{profile.city}</p>
           <div className="salon-title">
@@ -124,7 +124,7 @@ export default function SalonPage() {
         </div>
       </section>
 
-      <section className="section grid">
+      <section className="section grid" id="servicos">
         {profile.services.map((service) => (
           <article key={service.id} className="feature">
             <h3>{service.name}</h3>
@@ -135,7 +135,7 @@ export default function SalonPage() {
         ))}
       </section>
 
-      <section className="section split">
+      <section className="section split" id="fidelidade">
         <div>
           <h2>Equipe</h2>
           <div className="staff-list">
@@ -160,6 +160,52 @@ export default function SalonPage() {
           <div className="pill">Clube Konnektx</div>
         </div>
       </section>
+      <nav className="bottom-nav">
+        <a href={`/s/${profile.slug}`}>
+          <span className="nav-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                fill="currentColor"
+                d="M12 3l9 8h-3v9h-5v-6H11v6H6v-9H3l9-8z"
+              />
+            </svg>
+          </span>
+          Inicio
+        </a>
+        <a href={`/s/${profile.slug}/agendar`}>
+          <span className="nav-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                fill="currentColor"
+                d="M7 2h2v2h6V2h2v2h3v18H4V4h3V2zm13 6H6v12h14V8zM8 10h4v4H8v-4z"
+              />
+            </svg>
+          </span>
+          Agenda
+        </a>
+        <a href="#fidelidade">
+          <span className="nav-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                fill="currentColor"
+                d="M12 2l2.6 5.3L20 8l-4 3.9.9 5.6L12 15.7 7.1 17.5 8 11.9 4 8l5.4-.7L12 2z"
+              />
+            </svg>
+          </span>
+          Fidelidade
+        </a>
+        <a href={`/s/${profile.slug}/perfil`}>
+          <span className="nav-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                fill="currentColor"
+                d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-4.4 0-8 2.2-8 5v3h16v-3c0-2.8-3.6-5-8-5z"
+              />
+            </svg>
+          </span>
+          Perfil
+        </a>
+      </nav>
     </div>
   )
 }
