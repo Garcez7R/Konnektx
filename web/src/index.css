@@ -8,11 +8,11 @@
   font-weight: 400;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  --canvas: #f5f2ee;
-  --ink: #0d0f12;
-  --muted: #5b5a66;
-  --accent: #ffb86b;
-  --accent-strong: #ff8a3d;
+  --canvas: #f6f5ef;
+  --ink: #0c120f;
+  --muted: #4f5b56;
+  --accent: #d6b24a;
+  --accent-strong: #b8902b;
   --soft: #ffffff;
   --glass: rgba(255, 255, 255, 0.72);
   --shadow: 0 20px 60px rgba(15, 23, 42, 0.15);
@@ -25,7 +25,7 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: radial-gradient(circle at top, #fff4e4 0%, #f5f2ee 45%, #e7e2dc 100%);
+  background: radial-gradient(circle at top, #f3f7ef 0%, #eef3ea 40%, #e6efe5 100%);
   color: var(--ink);
 }
 
@@ -89,9 +89,9 @@ img {
 }
 
 .btn.primary {
-  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  background: linear-gradient(135deg, #d9bd5b, #b38a2b);
   color: #1a1a1a;
-  box-shadow: 0 10px 30px rgba(255, 138, 61, 0.3);
+  box-shadow: 0 10px 30px rgba(179, 138, 43, 0.3);
 }
 
 .btn.ghost {
@@ -116,8 +116,8 @@ img {
 .card-glow {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at top left, rgba(255, 184, 107, 0.6), transparent 60%);
-  opacity: 0.8;
+  background: radial-gradient(circle at top left, rgba(214, 178, 74, 0.5), transparent 60%);
+  opacity: 0.9;
 }
 
 .card-body {
@@ -199,7 +199,7 @@ img {
   display: inline-flex;
   padding: 6px 14px;
   border-radius: 999px;
-  background: rgba(255, 138, 61, 0.2);
+  background: rgba(214, 178, 74, 0.25);
   font-weight: 600;
   margin-top: 16px;
 }
@@ -232,7 +232,7 @@ img {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #ffbf7c, #ffc8a7);
+  background: linear-gradient(135deg, #6a9a7a, #c9b262);
 }
 
 .staff-name {
