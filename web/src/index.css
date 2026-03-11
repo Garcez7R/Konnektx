@@ -475,6 +475,13 @@ img {
   align-items: center;
 }
 
+.admin-user {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
 .admin-toolbar {
   display: grid;
   gap: 16px;

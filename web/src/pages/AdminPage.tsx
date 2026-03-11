@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { API_BASE, addSalonMember, createService, createStaff, fetchAdminSalons, fetchAppointments, fetchCustomers, fetchMe, fetchMetrics, fetchSalon, fetchSalonMembers, fetchServices, fetchStaff, updateSalon, updateSalonMember } from '../lib/api'
+import { API_BASE, addSalonMember, createService, createStaff, fetchAdminSalons, fetchAppointments, fetchCustomers, fetchMe, fetchMetrics, fetchSalon, fetchSalonMembers, fetchServices, fetchStaff, logout, updateSalon, updateSalonMember } from '../lib/api'
 
 const tabs = ['dashboard', 'servicos', 'equipe', 'agenda', 'clientes', 'aparencia', 'config'] as const
 
@@ -134,7 +134,18 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
         </div>
         <div className="admin-actions">
           {userName ? (
-            <span>Logado como {userName}</span>
+            <div className="admin-user">
+              <span>Logado como {userName}</span>
+              <button
+                className="btn ghost"
+                onClick={async () => {
+                  await logout()
+                  window.location.href = '/app/master'
+                }}
+              >
+                Sair
+              </button>
+            </div>
           ) : (
             <div>
               <button

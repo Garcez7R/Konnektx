@@ -10,6 +10,7 @@ import {
   fetchSalon,
   fetchServices,
   fetchStaff,
+  logout,
   updateSalon,
 } from '../lib/api'
 import type { SalonProfile } from '../lib/api'
@@ -124,7 +125,18 @@ export default function OwnerDashboardPage() {
         </div>
         <div className="admin-actions">
           {userName ? (
-            <span>Logado como {userName}</span>
+            <div className="admin-user">
+              <span>Logado como {userName}</span>
+              <button
+                className="btn ghost"
+                onClick={async () => {
+                  await logout()
+                  window.location.href = '/app'
+                }}
+              >
+                Sair
+              </button>
+            </div>
           ) : (
             <div>
               <button

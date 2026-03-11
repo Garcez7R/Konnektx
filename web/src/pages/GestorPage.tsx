@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { API_BASE, fetchMe } from '../lib/api'
+import { API_BASE, fetchMe, logout } from '../lib/api'
 
 export default function GestorPage() {
   const [userName, setUserName] = useState<string | null>(null)
@@ -49,6 +49,18 @@ export default function GestorPage() {
         Voltar ao painel
       </Link>
       <h1>Área do gestor</h1>
+      <div className="admin-actions">
+        <span>Logado como {userName}</span>
+        <button
+          className="btn ghost"
+          onClick={async () => {
+            await logout()
+            window.location.href = '/app'
+          }}
+        >
+          Sair
+        </button>
+      </div>
       <div className="grid">
         <div className="feature">
           <h3>Seus dados</h3>
