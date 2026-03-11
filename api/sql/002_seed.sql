@@ -2,9 +2,9 @@ INSERT OR IGNORE INTO salons (id, slug, name, city, tagline, logo_url, cover_url
 VALUES (
   'salon_aurora',
   'aurora',
-  'Salao Aurora',
+  'Salão Aurora',
   'Pelotas - RS',
-  'Cortes modernos, luz natural e experiencia premium.',
+  'Cortes modernos, luz natural e experiência premium.',
   NULL,
   NULL,
   datetime('now')
@@ -30,7 +30,7 @@ VALUES (
   'simple',
   1,
   10,
-  'Ganhe 1 ponto por corte. A cada 10, um servico gratis.',
+  'Ganhe 1 ponto por corte. A cada 10, um serviço grátis.',
   NULL,
   datetime('now')
 );

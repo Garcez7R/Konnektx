@@ -252,9 +252,18 @@ export default function OwnerDashboardPage() {
               />
               <label>Preço (centavos)</label>
               <input
-                type="number"
+                type="text"
+                inputMode="numeric"
                 value={servicePrice}
-                onChange={(event) => setServicePrice(event.target.value)}
+                onChange={(event) => {
+                  const onlyDigits = event.target.value.replace(/\D/g, '')
+                  if (onlyDigits.length > 6) return
+                  const padded = onlyDigits.padStart(3, '0')
+                  const cents = padded.slice(-2)
+                  const reais = padded.slice(0, -2)
+                  const formatted = Number(reais || '0').toLocaleString('pt-BR')
+                  setServicePrice(`${formatted},${cents}`)
+                }}
               />
               <button
                 className="btn primary"
@@ -264,7 +273,7 @@ export default function OwnerDashboardPage() {
                   await createService(profile.slug, {
                     name: serviceName,
                     durationMinutes: Number(serviceDuration),
-                    priceCents: Number(servicePrice),
+                    priceCents: Number(servicePrice.replace(/\D/g, '')),
                   })
                   const data = await fetchServices(profile.slug)
                   setServices(data.services)
@@ -373,8 +382,16 @@ export default function OwnerDashboardPage() {
               >
                 Salvar aparência
               </button>
-              <img src={logoUrl || '/pwa-192.png'} alt="Logo do salão" />
-              <img src={coverUrl || '/cover-placeholder.svg'} alt="Capa do salão" />
+              <div className="preview-grid">
+                <div className="preview-card">
+                  <span className="pill">Logo</span>
+                  <img src={logoUrl || '/pwa-192.png'} alt="Logo do salão" />
+                </div>
+                <div className="preview-card">
+                  <span className="pill">Capa</span>
+                  <img src={coverUrl || '/cover-placeholder.svg'} alt="Capa do salão" />
+                </div>
+              </div>
             </div>
           </div>
 
