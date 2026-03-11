@@ -456,6 +456,12 @@ img {
   color: var(--muted);
 }
 
+.muted {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
 .loading {
   font-size: 1.1rem;
   color: var(--muted);

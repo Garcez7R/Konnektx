@@ -5,16 +5,19 @@ import { API_BASE, fetchMe, logout } from '../lib/api'
 export default function GestorPage() {
   const [userName, setUserName] = useState<string | null>(null)
   const [userEmail, setUserEmail] = useState<string | null>(null)
+  const [userRole, setUserRole] = useState<string | null>(null)
 
   useEffect(() => {
     fetchMe()
       .then((data) => {
         setUserName(data.user?.name ?? null)
         setUserEmail(data.user?.email ?? null)
+        setUserRole((data.user as { role?: string })?.role ?? null)
       })
       .catch(() => {
         setUserName(null)
         setUserEmail(null)
+        setUserRole(null)
       })
   }, [])
 
@@ -50,10 +53,19 @@ export default function GestorPage() {
       </Link>
       <h1>Área do gestor</h1>
       <div className="admin-actions">
-        <span>Logado como {userName}</span>
+        <div>
+          <span>Logado como {userName}</span>
+          {userEmail && (
+            <p className="muted">
+              {userEmail}{userRole ? ` · ${userRole}` : ''}
+            </p>
+          )}
+        </div>
         <button
           className="btn ghost"
           onClick={async () => {
+            const ok = window.confirm('Deseja sair do painel?')
+            if (!ok) return
             await logout()
             window.location.href = '/app'
           }}

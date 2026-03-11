@@ -29,6 +29,7 @@ const templates = [
 export default function AdminPage({ initialTab }: AdminPageProps) {
   const [userName, setUserName] = useState<string | null>(null)
   const [userRole, setUserRole] = useState<string | null>(null)
+  const [userEmail, setUserEmail] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<TabKey>(initialTab ?? 'dashboard')
   const [salons, setSalons] = useState<Array<{ id: string; slug: string; name: string; city: string }>>([])
   const [selectedSlug, setSelectedSlug] = useState<string>('aurora')
@@ -70,10 +71,12 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
       .then((data) => {
         setUserName(data.user?.name ?? null)
         setUserRole((data.user as { role?: string })?.role ?? null)
+        setUserEmail(data.user?.email ?? null)
       })
       .catch(() => {
         setUserName(null)
         setUserRole(null)
+        setUserEmail(null)
       })
 
     fetchAdminSalons().then((data) => setSalons(data.salons)).catch(() => null)
@@ -135,10 +138,19 @@ export default function AdminPage({ initialTab }: AdminPageProps) {
         <div className="admin-actions">
           {userName ? (
             <div className="admin-user">
-              <span>Logado como {userName}</span>
+              <div>
+                <span>Logado como {userName}</span>
+                {userEmail && (
+                  <p className="muted">
+                    {userEmail}{userRole ? ` · ${userRole}` : ''}
+                  </p>
+                )}
+              </div>
               <button
                 className="btn ghost"
                 onClick={async () => {
+                  const ok = window.confirm('Deseja sair do painel master?')
+                  if (!ok) return
                   await logout()
                   window.location.href = '/app/master'
                 }}

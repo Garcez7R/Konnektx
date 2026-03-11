@@ -18,6 +18,7 @@ import type { SalonProfile } from '../lib/api'
 export default function OwnerDashboardPage() {
   const [userName, setUserName] = useState<string | null>(null)
   const [userRole, setUserRole] = useState<string | null>(null)
+  const [userEmail, setUserEmail] = useState<string | null>(null)
   const [slugInput, setSlugInput] = useState('')
   const [activeSlug, setActiveSlug] = useState('')
   const [ownerSalons, setOwnerSalons] = useState<Array<{ id: string; slug: string; name: string; city: string; role: string }>>([])
@@ -58,10 +59,12 @@ export default function OwnerDashboardPage() {
       .then((data) => {
         setUserName(data.user?.name ?? null)
         setUserRole((data.user as { role?: string })?.role ?? null)
+        setUserEmail(data.user?.email ?? null)
       })
       .catch(() => {
         setUserName(null)
         setUserRole(null)
+        setUserEmail(null)
       })
   }, [])
 
@@ -126,10 +129,19 @@ export default function OwnerDashboardPage() {
         <div className="admin-actions">
           {userName ? (
             <div className="admin-user">
-              <span>Logado como {userName}</span>
+              <div>
+                <span>Logado como {userName}</span>
+                {userEmail && (
+                  <p className="muted">
+                    {userEmail}{userRole ? ` · ${userRole}` : ''}
+                  </p>
+                )}
+              </div>
               <button
                 className="btn ghost"
                 onClick={async () => {
+                  const ok = window.confirm('Deseja sair do painel?')
+                  if (!ok) return
                   await logout()
                   window.location.href = '/app'
                 }}
